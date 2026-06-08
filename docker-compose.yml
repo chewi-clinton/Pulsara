@@ -1,0 +1,80 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: nexoradb
+      POSTGRES_USER: nexorauser
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - internal
+
+  redis:
+    image: redis:7-alpine
+    networks:
+      - internal
+
+  backend:
+    build: ./backend
+    command: gunicorn config.wsgi:application --bind 0.0.0.0:8000 --workers 4
+    environment:
+      DATABASE_URL: postgres://nexorauser:${DB_PASSWORD}@db:5432/nexoradb
+      REDIS_URL: redis://redis:6379/0
+    env_file: .env
+    depends_on:
+      - db
+      - redis
+    networks:
+      - internal
+      - web
+
+  celery_worker:
+    build: ./backend
+    command: celery -A config worker --loglevel=info
+    env_file: .env
+    depends_on:
+      - db
+      - redis
+    networks:
+      - internal
+
+  celery_beat:
+    build: ./backend
+    command: celery -A config beat --loglevel=info
+    env_file: .env
+    depends_on:
+      - db
+      - redis
+    networks:
+      - internal
+
+  frontend:
+    build: ./frontend
+    environment:
+      NEXT_PUBLIC_API_URL: https://api.nexora.app
+    networks:
+      - web
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./ssl:/etc/ssl
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      - web
+
+volumes:
+  postgres_data:
+
+networks:
+  internal:
+  web:
