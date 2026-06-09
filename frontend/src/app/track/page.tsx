@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { Truck, ArrowRight, Hash } from "lucide-react";
+import Footer from "../../components/Footer";
 
 export default function TrackOrder() {
   const [orderId, setOrderId] = useState("");
@@ -61,6 +62,7 @@ export default function TrackOrder() {
         </div>
 
       </div>
+      <Footer />
     </div>
   );
 }

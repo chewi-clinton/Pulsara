@@ -1,7 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
+import Image from "next/image";
+import Footer from "../components/Footer";
 import {
   Zap,
   ShieldCheck,
@@ -10,6 +12,7 @@ import {
   ShoppingCart,
   FileCode2,
   Globe2,
+  Globe,
 } from "lucide-react";
 
 export default function Home() {
@@ -70,6 +73,25 @@ export default function Home() {
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-[#FFFFFF] font-sans text-slate-900">
+
+      {/* NAVBAR */}
+      <header className="sticky top-0 z-50 border-b border-slate-100 bg-white/80 backdrop-blur-md px-6 lg:px-16 py-4 flex items-center justify-between">
+        <span className="text-lg font-black tracking-tight text-[#4F46E5]">Nexora</span>
+        <nav className="flex items-center space-x-8 text-xs font-bold text-slate-500 tracking-wide">
+          <Link href="/" className="text-[#4F46E5] underline decoration-2 underline-offset-4">Home</Link>
+          <Link href="/smm" className="hover:text-slate-900 transition-colors">SMM Services</Link>
+          <Link href="/otp" className="hover:text-slate-900 transition-colors">OTP Numbers</Link>
+          <Link href="/track" className="hover:text-slate-900 transition-colors">Track Order</Link>
+          <Link href="/faq" className="hover:text-slate-900 transition-colors">FAQ</Link>
+        </nav>
+        <div className="flex items-center space-x-4">
+          <Link href="/admin/login" className="text-xs font-bold text-slate-600 hover:text-slate-900 transition-colors">Login</Link>
+          <Link href="/smm" className="rounded-xl bg-[#4F46E5] px-4 py-2 text-xs font-bold text-white shadow-sm hover:bg-[#4338CA] transition-colors">
+            Get Started
+          </Link>
+          <Globe className="h-4 w-4 text-slate-400" />
+        </div>
+      </header>
 
       {/* Background SVG Dot Matrix Grid */}
       <div className="absolute inset-0 z-0 opacity-[0.4] pointer-events-none">
@@ -132,63 +154,27 @@ export default function Home() {
 
             {/* CTAs */}
             <div className="flex flex-wrap gap-4 pt-4">
-              <button className="flex items-center space-x-2 rounded-lg bg-[#4F46E5] px-6 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[#4338CA]">
+              <Link href="/smm" className="flex items-center space-x-2 rounded-lg bg-[#4F46E5] px-6 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[#4338CA]">
                 <span>Explore Marketplace</span>
                 <ShoppingCart className="h-4 w-4" />
-              </button>
-              <button className="flex items-center space-x-2 rounded-lg border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-700 shadow-sm transition-colors hover:bg-slate-50">
+              </Link>
+              <Link href="/faq" className="flex items-center space-x-2 rounded-lg border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-700 shadow-sm transition-colors hover:bg-slate-50">
                 <span>View API Docs</span>
                 <FileCode2 className="h-4 w-4 text-slate-400" />
-              </button>
+              </Link>
             </div>
           </div>
 
-          {/* Right Column — Visualization Card */}
+          {/* Right Column — Hero Image */}
           <div className="lg:col-span-7 flex justify-center lg:justify-end">
-            <div className="w-full max-w-2xl rounded-3xl border border-slate-100 bg-[#F8FAFC]/90 p-6 shadow-xl backdrop-blur-sm min-h-[480px] flex flex-col justify-between">
-
-              {/* Dashboard Header */}
-              <div className="flex items-center justify-between border-b border-slate-100 pb-4">
-                <div className="flex items-center space-x-2">
-                  <span className="h-2 w-2 animate-pulse rounded-full bg-[#10B981]"></span>
-                  <span className="text-xs font-bold text-slate-700 tracking-wide uppercase">
-                    Live Global Provisioning
-                  </span>
-                </div>
-                <div className="flex space-x-1.5">
-                  <span className="h-2 w-8 rounded-full bg-slate-200"></span>
-                  <span className="h-2 w-4 rounded-full bg-slate-200"></span>
-                </div>
-              </div>
-
-              {/* Map Graphic */}
-              <div className="relative flex-1 my-6 rounded-xl bg-white border border-slate-100 shadow-inner flex items-center justify-center overflow-hidden">
-                <div className="absolute top-[25%] left-[30%] h-2 w-2 rounded-full bg-[#4F46E5] ring-4 ring-[#4F46E5]/20" />
-                <div className="absolute top-[40%] right-[30%] h-2 w-2 rounded-full bg-[#4F46E5] ring-4 ring-[#4F46E5]/20" />
-                <div className="absolute bottom-[35%] left-[55%] h-2 w-2 rounded-full bg-[#4F46E5] ring-4 ring-[#4F46E5]/20" />
-                <div className="absolute bottom-[20%] right-[20%] h-2 w-2 rounded-full bg-[#4F46E5] ring-4 ring-[#4F46E5]/20" />
-                <span className="text-xs text-slate-400 select-none">
-                  Global System Monitor Mapping
-                </span>
-              </div>
-
-              {/* Metrics Panel */}
-              <div className="grid grid-cols-3 rounded-xl bg-[#0F172A] p-4 text-white">
-                <div className="col-span-2 space-y-1">
-                  <span className="text-[10px] font-bold tracking-wider text-slate-400 uppercase">
-                    Active Nodes
-                  </span>
-                  <p className="text-2xl font-bold tracking-tight text-white">1,284</p>
-                </div>
-                <div className="border-l border-slate-800 pl-4 space-y-1 text-right">
-                  <span className="text-[10px] font-bold tracking-wider text-slate-400 uppercase">
-                    Latency
-                  </span>
-                  <p className="text-2xl font-bold tracking-tight text-[#10B981]">14ms</p>
-                </div>
-              </div>
-
-            </div>
+            <Image
+              src="/socials.png"
+              alt="Nexora platform preview"
+              width={600}
+              height={420}
+              className="w-full max-w-lg h-auto object-contain"
+              priority
+            />
           </div>
         </section>
 
@@ -291,6 +277,7 @@ export default function Home() {
         </section>
 
       </div>
+      <Footer />
     </main>
   );
 }

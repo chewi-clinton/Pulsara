@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
+import Footer from "../../components/Footer";
 import {
   Globe,
   Search,
@@ -177,7 +179,8 @@ export default function SMMPage() {
       {/* NAVBAR */}
       <header className="sticky top-0 z-50 border-b border-slate-100 bg-white/80 backdrop-blur-md px-6 lg:px-16 py-4 flex items-center justify-between">
         <span className="text-lg font-black tracking-tight text-[#4F46E5]">Nexora</span>
-        <nav className="hidden md:flex items-center space-x-8 text-xs font-bold text-slate-500 tracking-wide">
+        <nav className="flex items-center space-x-8 text-xs font-bold text-slate-500 tracking-wide">
+          <Link href="/" className="hover:text-slate-900 transition-colors">Home</Link>
           <a href="/smm" className="text-[#4F46E5] underline decoration-2 underline-offset-4">SMM Services</a>
           <a href="/otp" className="hover:text-slate-900 transition-colors">OTP Numbers</a>
           <a href="/track" className="hover:text-slate-900 transition-colors">Track Order</a>
@@ -302,7 +305,7 @@ export default function SMMPage() {
           </div>
         )}
       </main>
-
+      <Footer />
     </div>
   );
 }

@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
+import Link from "next/link";
+import Footer from "../../components/Footer";
 import {
   Search,
   ChevronDown,
@@ -137,11 +139,12 @@ export default function FAQ() {
         <div className="flex items-center space-x-2">
           <span className="text-lg font-black tracking-tight text-[#4F46E5]">Nexora</span>
         </div>
-        <nav className="hidden md:flex items-center space-x-8 text-xs font-bold text-slate-500 tracking-wide">
-          <a href="#services" className="hover:text-slate-900 transition-colors">Services</a>
-          <a href="#otp" className="hover:text-slate-900 transition-colors">OTP Numbers</a>
-          <a href="#pricing" className="hover:text-slate-900 transition-colors">Pricing</a>
-          <a href="#faq" className="text-[#4F46E5] underline decoration-2 underline-offset-4">FAQ</a>
+        <nav className="flex items-center space-x-8 text-xs font-bold text-slate-500 tracking-wide">
+          <Link href="/" className="hover:text-slate-900 transition-colors">Home</Link>
+          <a href="/smm" className="hover:text-slate-900 transition-colors">SMM Services</a>
+          <a href="/otp" className="hover:text-slate-900 transition-colors">OTP Numbers</a>
+          <a href="/track" className="hover:text-slate-900 transition-colors">Track Order</a>
+          <a href="/faq" className="text-[#4F46E5] underline decoration-2 underline-offset-4">FAQ</a>
         </nav>
         <div className="flex items-center space-x-4">
           <button type="button" className="text-xs font-bold text-slate-600 hover:text-slate-900 transition-colors">
@@ -330,6 +333,7 @@ export default function FAQ() {
         </div>
       </section>
 
+      <Footer />
     </div>
   );
 }
