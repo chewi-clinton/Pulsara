@@ -75,7 +75,7 @@ export default function OrderDetails() {
               N
             </div>
             <div>
-              <h2 className="text-sm font-bold tracking-tight text-slate-900">Nexora Admin</h2>
+              <h2 className="text-sm font-bold tracking-tight text-slate-900">Pulsara Admin</h2>
               <p className="text-[10px] font-medium text-slate-400">Enterprise Tier</p>
             </div>
           </div>
@@ -126,7 +126,7 @@ export default function OrderDetails() {
         {/* TOP NAV BAR */}
         <header className="flex h-16 items-center justify-between border-b border-slate-100 bg-white px-8">
           <div className="flex items-center space-x-6 text-xs font-bold text-slate-400">
-            <span className="hover:text-slate-600 cursor-pointer">Nexora</span>
+            <span className="hover:text-slate-600 cursor-pointer">Pulsara</span>
             <Search className="h-4 w-4 text-slate-400 cursor-pointer" />
             <span className="text-slate-300">/</span>
             <span className="text-[#4F46E5] border-b-2 border-[#4F46E5] pb-5 pt-5">Orders</span>

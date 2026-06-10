@@ -34,7 +34,7 @@ export default function FlutterwaveCheckout() {
               <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#4F46E5] text-white shadow-sm">
                 <CreditCard className="h-4 w-4" />
               </div>
-              <h2 className="text-base font-bold tracking-tight text-[#0F172A]">Nexora</h2>
+              <h2 className="text-base font-bold tracking-tight text-[#0F172A]">Pulsara</h2>
             </div>
 
             {/* Amount */}

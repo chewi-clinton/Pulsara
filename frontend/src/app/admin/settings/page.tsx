@@ -25,8 +25,8 @@ import {
 } from "lucide-react";
 
 export default function SystemSettings() {
-  const [platformName, setPlatformName] = useState("Nexora Enterprise");
-  const [supportEmail, setSupportEmail] = useState("support@nexora.io");
+  const [platformName, setPlatformName] = useState("Pulsara Enterprise");
+  const [supportEmail, setSupportEmail] = useState("support@pulsara.io");
   const [maintenanceMode, setMaintenanceMode] = useState(false);
 
   const [smmKey, setSmmKey] = useState("sk_smm_live_89324792384723984723948");
@@ -60,7 +60,7 @@ export default function SystemSettings() {
               N
             </div>
             <div>
-              <h2 className="text-sm font-bold tracking-tight text-slate-900">Nexora Admin</h2>
+              <h2 className="text-sm font-bold tracking-tight text-slate-900">Pulsara Admin</h2>
               <p className="text-[10px] font-medium text-slate-400">Enterprise Tier</p>
             </div>
           </div>

@@ -54,7 +54,7 @@ export default function CryptoCheckout() {
                 <Wallet2 className="h-4 w-4" />
               </div>
               <h2 className="text-sm font-bold tracking-tight text-[#0F172A]">
-                Nexora Checkout
+                Pulsara Checkout
               </h2>
             </div>
 
@@ -229,7 +229,7 @@ export default function CryptoCheckout() {
               <span>End-to-End Encrypted</span>
             </div>
             <div className="text-slate-400 normal-case font-medium">
-              Powered by <span className="font-bold text-slate-700">Nexora Pay</span>
+              Powered by <span className="font-bold text-slate-700">Pulsara Pay</span>
             </div>
           </div>
 

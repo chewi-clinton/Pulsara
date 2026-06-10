@@ -22,7 +22,7 @@ export default function Header() {
         {/* Logo */}
         <div className="flex items-center">
           <Link href="/" className="text-2xl font-bold tracking-tight text-[#4F46E5]">
-            Nexora
+            Pulsara
           </Link>
         </div>
 

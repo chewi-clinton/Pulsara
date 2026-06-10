@@ -78,7 +78,7 @@ export default function AdminSMMServices() {
           <div className="flex items-center space-x-3 px-2">
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#4F46E5] text-sm font-bold text-white shadow-sm">N</div>
             <div>
-              <h2 className="text-sm font-bold tracking-tight text-slate-900">Nexora Admin</h2>
+              <h2 className="text-sm font-bold tracking-tight text-slate-900">Pulsara Admin</h2>
               <p className="text-[10px] font-medium text-slate-400">Enterprise Tier</p>
             </div>
           </div>

@@ -130,7 +130,7 @@ export default function OrdersManagement() {
               N
             </div>
             <div>
-              <h2 className="text-sm font-bold tracking-tight text-slate-900">Nexora Admin</h2>
+              <h2 className="text-sm font-bold tracking-tight text-slate-900">Pulsara Admin</h2>
               <p className="text-[10px] font-medium text-slate-400">Enterprise Tier</p>
             </div>
           </div>

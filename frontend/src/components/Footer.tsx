@@ -50,10 +50,10 @@ export default function Footer() {
           <div className="col-span-2 flex flex-col justify-between md:col-span-1">
             <div className="space-y-4">
               <Link href="/" className="text-xl font-bold tracking-tight text-[#0F172A]">
-                Nexora
+                Pulsara
               </Link>
               <p className="text-xs leading-relaxed text-slate-500 max-w-[200px]">
-                © {currentYear} Nexora Digital. All rights reserved.
+                © {currentYear} Pulsara Digital. All rights reserved.
               </p>
             </div>
           </div>
