@@ -1,45 +1,63 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import {
   Mail,
   Lock,
   Eye,
   EyeOff,
   LogIn,
-  ShieldCheck
+  ShieldCheck,
 } from "lucide-react";
 
 export default function ConsoleLogin() {
-  const [email, setEmail] = useState("admin@nexora.digital");
-  const [password, setPassword] = useState("password123");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [rememberDevice, setRememberDevice] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Authenticating console credentials...", { email, rememberDevice });
+    console.log("Authenticating...", { email, rememberDevice });
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#F8FAFC] p-4 font-sans text-slate-600 antialiased">
-      <div className="w-full max-w-lg space-y-6 text-center">
+    <div className="relative flex min-h-screen items-center justify-center bg-[#FFFFFF] p-4 font-sans text-slate-600 antialiased overflow-hidden">
 
-        {/* UPPER DESCRIPTIVE TEXT */}
-        <p className="text-sm font-medium text-slate-500">
-          Enter your credentials to access the console
-        </p>
+      {/* Dot grid background */}
+      <div className="absolute inset-0 z-0 opacity-[0.4] pointer-events-none">
+        <svg className="h-full w-full" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+          <defs>
+            <pattern id="dots" width="32" height="32" patternUnits="userSpaceOnUse">
+              <circle cx="2" cy="2" r="1.5" fill="#94A3B8" />
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#dots)" />
+        </svg>
+      </div>
 
-        {/* AUTHENTICATION MATRIX CONTAINER CARD */}
+      <div className="relative z-10 w-full max-w-lg space-y-6 text-center">
+
+        {/* Brand */}
+        <div className="space-y-1">
+          <Link href="/" className="inline-block text-3xl font-black tracking-tight text-[#4F46E5]">
+            Pulsara
+          </Link>
+          <p className="text-xs font-medium text-slate-400">
+            Sign in to your account
+          </p>
+        </div>
+
+        {/* Card */}
         <div className="rounded-3xl border border-slate-100 bg-white p-8 shadow-xl text-left">
           <form onSubmit={handleSubmit} className="space-y-5">
 
-            {/* Work Email Field Box */}
             <div className="space-y-2">
               <label className="block text-xs font-bold text-slate-500 tracking-wide">
-                Work Email
+                Email Address
               </label>
-              <div className="relative rounded-xl shadow-sm">
+              <div className="relative">
                 <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
                   <Mail className="h-4 w-4 text-slate-400" />
                 </div>
@@ -47,27 +65,23 @@ export default function ConsoleLogin() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="admin@nexora.digital"
+                  placeholder="you@example.com"
                   required
                   className="w-full rounded-xl border border-slate-200 bg-white py-3.5 pl-11 pr-4 text-sm font-medium text-slate-800 placeholder:text-slate-300 focus:border-[#4F46E5] focus:outline-none focus:ring-1 focus:ring-[#4F46E5] transition-colors"
                 />
               </div>
             </div>
 
-            {/* Password Field Box */}
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <label className="block text-xs font-bold text-slate-500 tracking-wide">
                   Password
                 </label>
-                <a
-                  href="#forgot"
-                  className="text-xs font-bold text-[#4F46E5] hover:text-[#4338CA] transition-colors"
-                >
+                <button type="button" className="text-xs font-bold text-[#4F46E5] hover:text-[#4338CA] transition-colors">
                   Forgot password?
-                </a>
+                </button>
               </div>
-              <div className="relative rounded-xl shadow-sm">
+              <div className="relative">
                 <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
                   <Lock className="h-4 w-4 text-slate-400" />
                 </div>
@@ -83,14 +97,12 @@ export default function ConsoleLogin() {
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute inset-y-0 right-0 flex items-center pr-4 text-slate-300 hover:text-slate-500 transition-colors"
-                  title={showPassword ? "Hide password" : "Show password"}
                 >
                   {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
               </div>
             </div>
 
-            {/* Custom Interactive Device Switch Toggler */}
             <div className="flex items-center space-x-3 pt-1">
               <button
                 type="button"
@@ -112,7 +124,6 @@ export default function ConsoleLogin() {
               </span>
             </div>
 
-            {/* Submission Authentication Core Trigger Button */}
             <div className="pt-2">
               <button
                 type="submit"
@@ -125,24 +136,26 @@ export default function ConsoleLogin() {
 
           </form>
 
-          {/* Separation Border Grid Line */}
           <hr className="my-6 border-slate-100" />
 
-          {/* UTILITY COMPLIANCE & BRAND LINKS FOOTER */}
           <div className="flex items-center justify-between text-xs font-bold text-slate-400">
             <div className="flex items-center space-x-1.5 text-slate-500">
               <ShieldCheck className="h-4 w-4 text-slate-400 stroke-[2]" />
               <span>Secure Access</span>
             </div>
-            <a
-              href="#support"
-              className="text-slate-500 hover:text-slate-700 transition-colors"
-            >
+            <button type="button" className="text-slate-500 hover:text-slate-700 transition-colors">
               Support Center
-            </a>
+            </button>
           </div>
-
         </div>
+
+        {/* Sign up link */}
+        <p className="text-xs font-medium text-slate-400">
+          Don&apos;t have an account?{" "}
+          <Link href="/register" className="font-bold text-[#4F46E5] hover:text-[#4338CA] transition-colors">
+            Create one
+          </Link>
+        </p>
 
       </div>
     </div>
