@@ -1,80 +1,106 @@
 version: "3.9"
 
 services:
+
   db:
     image: postgres:16-alpine
+    restart: unless-stopped
     environment:
-      POSTGRES_DB: nexoradb
-      POSTGRES_USER: nexorauser
+      POSTGRES_DB: pulsaradb
+      POSTGRES_USER: pulsarauser
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - internal
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pulsarauser -d pulsaradb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   redis:
     image: redis:7-alpine
+    restart: unless-stopped
     networks:
       - internal
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   backend:
     build: ./backend
-    command: gunicorn config.wsgi:application --bind 0.0.0.0:8000 --workers 4
+    restart: unless-stopped
     environment:
-      DATABASE_URL: postgres://nexorauser:${DB_PASSWORD}@db:5432/nexoradb
+      DATABASE_URL: postgres://pulsarauser:${DB_PASSWORD}@db:5432/pulsaradb
       REDIS_URL: redis://redis:6379/0
     env_file: .env
+    expose:
+      - "8000"
     depends_on:
-      - db
-      - redis
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     networks:
       - internal
-      - web
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:8000/api/services/smm/ || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
   celery_worker:
     build: ./backend
-    command: celery -A config worker --loglevel=info
+    restart: unless-stopped
+    command: celery -A config worker --loglevel=info --concurrency=2
+    environment:
+      DATABASE_URL: postgres://pulsarauser:${DB_PASSWORD}@db:5432/pulsaradb
+      REDIS_URL: redis://redis:6379/0
     env_file: .env
     depends_on:
-      - db
-      - redis
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     networks:
       - internal
 
   celery_beat:
     build: ./backend
+    restart: unless-stopped
     command: celery -A config beat --loglevel=info
+    environment:
+      DATABASE_URL: postgres://pulsarauser:${DB_PASSWORD}@db:5432/pulsaradb
+      REDIS_URL: redis://redis:6379/0
     env_file: .env
     depends_on:
-      - db
-      - redis
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     networks:
       - internal
 
   frontend:
     build: ./frontend
+    restart: unless-stopped
     environment:
-      NEXT_PUBLIC_API_URL: https://api.nexora.app
-    networks:
-      - web
-
-  nginx:
-    image: nginx:alpine
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./ssl:/etc/ssl
+      BACKEND_URL: http://backend:8000
+    expose:
+      - "3000"
     depends_on:
-      - backend
-      - frontend
+      backend:
+        condition: service_healthy
     networks:
-      - web
+      - internal
 
 volumes:
   postgres_data:
 
 networks:
   internal:
-  web:
+    driver: bridge
