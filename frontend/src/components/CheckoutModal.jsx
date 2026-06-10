@@ -17,7 +17,7 @@ export default function CheckoutModal() {
   const [profileUrl, setProfileUrl] = useState("");
   const [email, setEmail] = useState("");
   const [quantity, setQuantity] = useState(1000);
-  const [paymentMethod, setPaymentMethod] = useState<"cryptomus" | "flutterwave">("cryptomus");
+  const [paymentMethod, setPaymentMethod] = useState("cryptomus");
 
   const ratePer1k = 2.5;
   const calculatedTotal = ((quantity / 1000) * ratePer1k).toFixed(2);

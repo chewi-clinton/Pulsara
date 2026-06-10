@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 
 export default function FlutterwaveCheckout() {
-  const [activeTab, setActiveTab] = useState<"card" | "momo" | "bank">("card");
+  const [activeTab, setActiveTab] = useState("card");
   const [cardholderName, setCardholderName] = useState("");
   const [cardNumber, setCardNumber] = useState("");
   const [expiryDate, setExpiryDate] = useState("");
@@ -83,13 +83,11 @@ export default function FlutterwaveCheckout() {
 
             {/* Tab Switcher */}
             <div className="flex items-center space-x-6 border-b border-slate-100 pb-px text-xs font-bold tracking-wide text-slate-500">
-              {(
-                [
-                  { id: "card", label: "Card", icon: <CreditCard className="h-4 w-4" /> },
-                  { id: "momo", label: "Mobile Money", icon: <Smartphone className="h-4 w-4" /> },
-                  { id: "bank", label: "Bank Transfer", icon: <Building2 className="h-4 w-4" /> },
-                ] as const
-              ).map((tab) => (
+              {[
+                { id: "card", label: "Card", icon: <CreditCard className="h-4 w-4" /> },
+                { id: "momo", label: "Mobile Money", icon: <Smartphone className="h-4 w-4" /> },
+                { id: "bank", label: "Bank Transfer", icon: <Building2 className="h-4 w-4" /> },
+              ].map((tab) => (
                 <button
                   key={tab.id}
                   type="button"

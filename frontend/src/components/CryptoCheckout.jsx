@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 
 export default function CryptoCheckout() {
-  const [selectedNetwork, setSelectedNetwork] = useState<"btc" | "eth" | "usdt" | "ltc">("btc");
+  const [selectedNetwork, setSelectedNetwork] = useState("btc");
   const [copiedAmount, setCopiedAmount] = useState(false);
   const [copiedAddress, setCopiedAddress] = useState(false);
 
@@ -23,9 +23,9 @@ export default function CryptoCheckout() {
     { id: "eth", name: "Ethereum", short: "ETH (ERC-20)", logoBg: "bg-[#627EEA]" },
     { id: "usdt", name: "Tether", short: "USDT (TRC-20)", logoBg: "bg-[#26A17B]" },
     { id: "ltc", name: "Litecoin", short: "LTC", logoBg: "bg-[#345D9D]" },
-  ] as const;
+  ];
 
-  const handleCopy = async (text: string, type: "amount" | "address") => {
+  const handleCopy = async (text, type) => {
     try {
       await navigator.clipboard.writeText(text);
       if (type === "amount") {
