@@ -1,241 +1,207 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   LayoutDashboard,
-  ShoppingBag,
   Receipt,
   BarChart3,
-  Users2,
-  CreditCard,
-  Plus,
+  Settings,
   HelpCircle,
   LogOut,
   Search,
   ChevronDown,
-  Calendar,
   Download,
   MoreVertical,
-  ThumbsUp,
-  MessageSquare,
-  UserPlus,
-  Phone,
-  Play
+  Loader2,
+  Eye,
+  RefreshCw,
+  XCircle,
 } from "lucide-react";
+import Link from "next/link";
+import { api, type AdminOrderItem } from "../../../lib/api";
 
-interface OrderItem {
-  id: string;
-  serviceType: string;
-  serviceDetail: string;
-  serviceIcon: React.ReactNode;
-  customer: string;
-  status: "Completed" | "Pending" | "Failed";
-  amount: string;
-  date: string;
-  time: string;
-}
+const STATUS_STYLE: Record<string, string> = {
+  completed: "bg-[#ECFDF5] text-[#10B981] border border-[#D1FAE5]",
+  paid: "bg-[#ECFDF5] text-[#10B981] border border-[#D1FAE5]",
+  received: "bg-[#ECFDF5] text-[#10B981] border border-[#D1FAE5]",
+  processing: "bg-[#FFF7ED] text-[#F59E0B] border border-[#FFEDD5]",
+  in_progress: "bg-[#FFF7ED] text-[#F59E0B] border border-[#FFEDD5]",
+  waiting_sms: "bg-[#EEF2FF] text-[#4F46E5] border border-[#E0E7FF]",
+  pending_payment: "bg-slate-50 text-slate-400 border border-slate-100",
+  failed: "bg-[#FEF2F2] text-[#EF4444] border border-[#FEE2E2]",
+  cancelled: "bg-[#FEF2F2] text-[#EF4444] border border-[#FEE2E2]",
+  expired: "bg-[#FEF2F2] text-[#EF4444] border border-[#FEE2E2]",
+  refunded: "bg-slate-50 text-slate-400 border border-slate-100",
+};
+
+const sidebarLinks = [
+  { name: "Dashboard", href: "/admin/dashboard", icon: <LayoutDashboard className="h-4 w-4" /> },
+  { name: "Orders", href: "/admin/orders", icon: <Receipt className="h-4 w-4" /> },
+  { name: "Analytics", href: "/admin/analytics", icon: <BarChart3 className="h-4 w-4" /> },
+  { name: "Settings", href: "/admin/settings", icon: <Settings className="h-4 w-4" /> },
+];
+
+const ALL_STATUSES = ["", "pending_payment", "paid", "processing", "in_progress", "completed", "waiting_sms", "received", "failed", "cancelled", "expired", "refunded"];
+const ALL_TYPES = [{ value: "all", label: "All Types" }, { value: "smm", label: "SMM" }, { value: "otp", label: "OTP" }];
 
 export default function OrdersManagement() {
-  const [activeTab, setActiveTab] = useState("Orders");
-  const [searchQuery, setSearchQuery] = useState("");
+  const router = useRouter();
+  const [orders, setOrders] = useState<AdminOrderItem[]>([]);
+  const [count, setCount] = useState(0);
+  const [page, setPage] = useState(1);
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
+  const [typeFilter, setTypeFilter] = useState("all");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [actionLoading, setActionLoading] = useState<string | null>(null);
 
-  const sidebarLinks = [
-    { name: "Dashboard", icon: <LayoutDashboard className="h-4 w-4" /> },
-    { name: "Marketplace", icon: <ShoppingBag className="h-4 w-4" /> },
-    { name: "Orders", icon: <Receipt className="h-4 w-4" /> },
-    { name: "Analytics", icon: <BarChart3 className="h-4 w-4" /> },
-    { name: "Customers", icon: <Users2 className="h-4 w-4" /> },
-    { name: "Payouts", icon: <CreditCard className="h-4 w-4" /> },
-  ];
+  const pageSize = 20;
+  const totalPages = Math.ceil(count / pageSize);
 
-  const ordersData: OrderItem[] = [
-    {
-      id: "#ORD-8921",
-      serviceType: "Instagram Likes",
-      serviceDetail: "(10k)",
-      serviceIcon: <ThumbsUp className="h-3.5 w-3.5 text-blue-600" />,
-      customer: "alex.chen@example.com",
-      status: "Completed",
-      amount: "$45.00",
-      date: "Oct 24,",
-      time: "14:32"
-    },
-    {
-      id: "#OTP-4432",
-      serviceType: "WhatsApp OTP",
-      serviceDetail: "(IN)",
-      serviceIcon: <MessageSquare className="h-3.5 w-3.5 text-emerald-600" />,
-      customer: "api_user_99@vendor.io",
-      status: "Pending",
-      amount: "$0.08",
-      date: "Oct 24,",
-      time: "14:30"
-    },
-    {
-      id: "#ORD-8920",
-      serviceType: "TikTok Followers",
-      serviceDetail: "(5k)",
-      serviceIcon: <UserPlus className="h-3.5 w-3.5 text-indigo-600" />,
-      customer: "sarah.j@marketing.co",
-      status: "Failed",
-      amount: "$22.50",
-      date: "Oct 24,",
-      time: "13:15"
-    },
-    {
-      id: "#OTP-4431",
-      serviceType: "Voice OTP",
-      serviceDetail: "(US)",
-      serviceIcon: <Phone className="h-3.5 w-3.5 text-sky-600" />,
-      customer: "system@secure-auth.net",
-      status: "Completed",
-      amount: "$0.12",
-      date: "Oct 24,",
-      time: "12:45"
-    },
-    {
-      id: "#ORD-8919",
-      serviceType: "YouTube Views",
-      serviceDetail: "(50k)",
-      serviceIcon: <Play className="h-3.5 w-3.5 text-red-600" />,
-      customer: "content_creator@gmail.com",
-      status: "Completed",
-      amount: "$120.00",
-      date: "Oct 24,",
-      time: "10:05"
+  const load = useCallback((p = page) => {
+    setLoading(true);
+    const params: Record<string, string> = { page: String(p) };
+    if (search) params.search = search;
+    if (statusFilter) params.status = statusFilter;
+    if (typeFilter !== "all") params.type = typeFilter;
+    api.admin.orders(params)
+      .then((res) => { setOrders(res.results); setCount(res.count); })
+      .catch((e: Error) => {
+        if (e.message.includes("401") || e.message.toLowerCase().includes("session")) router.push("/admin/login");
+        else setError(e.message);
+      })
+      .finally(() => setLoading(false));
+  }, [page, search, statusFilter, typeFilter, router]);
+
+  useEffect(() => { load(1); setPage(1); }, [search, statusFilter, typeFilter]); // eslint-disable-line
+  useEffect(() => { load(page); }, [page]); // eslint-disable-line
+
+  const handleRefund = async (orderId: string) => {
+    setActionLoading(orderId);
+    try {
+      await api.admin.refundOrder(orderId);
+      load(page);
+    } catch (e: unknown) {
+      alert((e as Error).message);
+    } finally {
+      setActionLoading(null);
     }
-  ];
+  };
 
-  const getStatusStyles = (status: OrderItem["status"]) => {
-    switch (status) {
-      case "Completed":
-        return "bg-[#ECFDF5] text-[#10B981] border border-[#D1FAE5]";
-      case "Pending":
-        return "bg-[#FFF7ED] text-[#F59E0B] border border-[#FFEDD5]";
-      case "Failed":
-        return "bg-[#FEF2F2] text-[#EF4444] border border-[#FEE2E2]";
-      default:
-        return "bg-slate-100 text-slate-600";
+  const handleRetry = async (orderId: string) => {
+    setActionLoading(orderId);
+    try {
+      await api.admin.retryOrder(orderId);
+      load(page);
+    } catch (e: unknown) {
+      alert((e as Error).message);
+    } finally {
+      setActionLoading(null);
     }
+  };
+
+  const handleSignOut = () => {
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
+    router.push("/admin/login");
   };
 
   return (
     <div className="flex min-h-screen bg-[#F8FAFC] font-sans antialiased text-slate-900">
 
-      {/* SIDEBAR */}
       <aside className="fixed inset-y-0 left-0 z-20 flex w-64 flex-col justify-between border-r border-slate-100 bg-white p-5">
         <div className="space-y-6">
           <div className="flex items-center space-x-3 px-2">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#4F46E5] text-sm font-bold text-white shadow-sm">
-              N
-            </div>
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#4F46E5] text-sm font-bold text-white shadow-sm">P</div>
             <div>
               <h2 className="text-sm font-bold tracking-tight text-slate-900">Pulsara Admin</h2>
               <p className="text-[10px] font-medium text-slate-400">Enterprise Tier</p>
             </div>
           </div>
-
           <nav className="space-y-1">
             {sidebarLinks.map((link) => {
-              const isActive = activeTab === link.name;
+              const active = link.href === "/admin/orders";
               return (
-                <button
-                  key={link.name}
-                  onClick={() => setActiveTab(link.name)}
-                  className={`flex w-full items-center space-x-3 rounded-xl px-3 py-2.5 text-xs font-semibold tracking-wide transition-all ${
-                    isActive
-                      ? "bg-[#EEF2F6] text-[#4F46E5]"
-                      : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
-                  }`}
+                <Link key={link.name} href={link.href}
+                  className={`flex w-full items-center space-x-3 rounded-xl px-3 py-2.5 text-xs font-semibold tracking-wide transition-all ${active ? "bg-[#EEF2F6] text-[#4F46E5]" : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"}`}
                 >
                   {link.icon}
                   <span>{link.name}</span>
-                </button>
+                </Link>
               );
             })}
           </nav>
         </div>
-
         <div className="space-y-4">
-          <button className="flex w-full items-center justify-center space-x-2 rounded-xl bg-[#4F46E5] py-2.5 text-xs font-bold text-white shadow-sm hover:bg-[#4338CA] transition-colors">
-            <Plus className="h-4 w-4 stroke-[2.5]" />
-            <span>New Service</span>
-          </button>
           <hr className="border-slate-100" />
           <div className="space-y-1">
-            <button className="flex w-full items-center space-x-3 rounded-xl px-3 py-2 text-xs font-semibold text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-colors">
-              <HelpCircle className="h-4 w-4" />
-              <span>Support</span>
+            <button className="flex w-full items-center space-x-3 rounded-xl px-3 py-2 text-xs font-semibold text-slate-500 hover:bg-slate-50 hover:text-slate-900">
+              <HelpCircle className="h-4 w-4" /><span>Support</span>
             </button>
-            <button className="flex w-full items-center space-x-3 rounded-xl px-3 py-2 text-xs font-semibold text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-colors">
-              <LogOut className="h-4 w-4" />
-              <span>Sign Out</span>
+            <button onClick={handleSignOut} className="flex w-full items-center space-x-3 rounded-xl px-3 py-2 text-xs font-semibold text-slate-500 hover:bg-slate-50 hover:text-slate-900">
+              <LogOut className="h-4 w-4" /><span>Sign Out</span>
             </button>
           </div>
         </div>
       </aside>
 
-      {/* MAIN CONTENT */}
       <div className="flex-1 pl-64">
         <main className="p-8 space-y-6 max-w-[1400px] mx-auto">
 
-          {/* PAGE HEADER */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div className="space-y-1">
-              <h1 className="text-2xl font-extrabold tracking-tight text-[#0F172A]">
-                Orders Management
-              </h1>
-              <p className="text-xs text-slate-400 font-medium">
-                View, track, and manage all platform transactions.
-              </p>
+              <h1 className="text-2xl font-extrabold tracking-tight text-[#0F172A]">Orders Management</h1>
+              <p className="text-xs text-slate-400 font-medium">View, track, and manage all platform transactions.</p>
             </div>
-            <button className="inline-flex items-center space-x-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-xs font-bold text-slate-700 shadow-sm hover:bg-slate-50 transition-colors self-start sm:self-auto">
-              <Download className="h-3.5 w-3.5 text-slate-500" />
-              <span>Export CSV</span>
+            <button className="inline-flex items-center space-x-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-xs font-bold text-slate-700 shadow-sm hover:bg-slate-50 self-start sm:self-auto">
+              <Download className="h-3.5 w-3.5 text-slate-500" /><span>Export CSV</span>
             </button>
           </div>
 
-          {/* DATA TABLE CARD */}
-          <div className="rounded-2xl border border-slate-100 bg-white shadow-sm overflow-hidden">
+          {error && (
+            <div className="rounded-xl bg-rose-50 border border-rose-100 px-4 py-3 text-xs font-semibold text-rose-600">{error}</div>
+          )}
 
-            {/* TOOLBAR */}
+          <div className="rounded-2xl border border-slate-100 bg-white shadow-sm overflow-hidden">
             <div className="p-4 border-b border-slate-50 flex flex-col md:flex-row gap-3 justify-between items-center bg-white">
               <div className="relative w-full md:max-w-md">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
                 <input
                   type="text"
-                  placeholder="Search Order ID or Email..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search email, service..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
                   className="w-full pl-9 pr-4 py-2 text-xs font-medium bg-white rounded-xl border border-slate-200 text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-[#4F46E5] focus:ring-1 focus:ring-[#4F46E5] transition-all"
                 />
               </div>
-
               <div className="flex flex-wrap items-center gap-2.5 w-full md:w-auto justify-end">
-                <button className="inline-flex items-center space-x-2 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50">
-                  <span>All Statuses</span>
-                  <ChevronDown className="h-3.5 w-3.5 text-slate-400" />
-                </button>
-
-                <button className="inline-flex items-center space-x-2 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50">
-                  <span>All Types</span>
-                  <ChevronDown className="h-3.5 w-3.5 text-slate-400" />
-                </button>
-
-                <button className="inline-flex items-center space-x-2 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50">
-                  <Calendar className="h-3.5 w-3.5 text-slate-400" />
-                  <span>Date Range</span>
-                </button>
+                <select
+                  value={statusFilter}
+                  onChange={(e) => setStatusFilter(e.target.value)}
+                  className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 focus:outline-none focus:border-[#4F46E5]"
+                >
+                  {ALL_STATUSES.map((s) => (
+                    <option key={s} value={s}>{s ? s.replace(/_/g, " ") : "All Statuses"}</option>
+                  ))}
+                </select>
+                <select
+                  value={typeFilter}
+                  onChange={(e) => setTypeFilter(e.target.value)}
+                  className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 focus:outline-none focus:border-[#4F46E5]"
+                >
+                  {ALL_TYPES.map((t) => <option key={t.value} value={t.value}>{t.label}</option>)}
+                </select>
               </div>
             </div>
 
-            {/* TABLE */}
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <thead>
                   <tr className="border-b border-slate-100 bg-slate-50/70 text-[10px] font-bold uppercase tracking-wider text-slate-400">
                     <th className="py-3 px-6">Order ID</th>
-                    <th className="py-3 px-6">Service Type</th>
+                    <th className="py-3 px-6">Service</th>
                     <th className="py-3 px-6">Customer</th>
                     <th className="py-3 px-6 text-center">Status</th>
                     <th className="py-3 px-6">Amount</th>
@@ -244,52 +210,50 @@ export default function OrdersManagement() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-50 text-xs font-medium text-slate-700">
-                  {ordersData.map((order) => (
-                    <tr key={order.id} className="hover:bg-slate-50/50 transition-colors">
-                      <td className="py-4 px-6 font-mono font-bold text-slate-900 tracking-tight">
-                        {order.id}
-                      </td>
-
-                      <td className="py-4 px-6">
-                        <div className="flex items-center space-x-2.5">
-                          <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-slate-50 border border-slate-100">
-                            {order.serviceIcon}
-                          </div>
-                          <span className="font-bold text-slate-800">
-                            {order.serviceType}{" "}
-                            <span className="font-normal text-slate-400 text-[11px]">
-                              {order.serviceDetail}
-                            </span>
-                          </span>
-                        </div>
-                      </td>
-
-                      <td className="py-4 px-6 text-slate-500 font-medium break-all max-w-[220px]">
-                        {order.customer}
-                      </td>
-
+                  {loading && (
+                    <tr><td colSpan={7} className="py-12 text-center"><Loader2 className="h-5 w-5 animate-spin text-[#4F46E5] mx-auto" /></td></tr>
+                  )}
+                  {!loading && orders.length === 0 && (
+                    <tr><td colSpan={7} className="py-12 text-center text-slate-400 text-xs">No orders found.</td></tr>
+                  )}
+                  {!loading && orders.map((order) => (
+                    <tr key={order.order_id} className="hover:bg-slate-50/50 transition-colors">
+                      <td className="py-4 px-6 font-mono font-bold text-slate-900">{order.order_id}</td>
+                      <td className="py-4 px-6 font-bold text-slate-800 max-w-[200px] truncate">{order.service_name}</td>
+                      <td className="py-4 px-6 text-slate-500 break-all max-w-[200px]">{order.customer_email || "—"}</td>
                       <td className="py-4 px-6 text-center whitespace-nowrap">
-                        <span className={`inline-flex items-center space-x-1.5 rounded-full px-2.5 py-0.5 text-[10px] font-bold tracking-wide ${getStatusStyles(order.status)}`}>
-                          <span className={`h-1 w-1 rounded-full ${
-                            order.status === "Completed" ? "bg-[#10B981]" : order.status === "Pending" ? "bg-[#F59E0B]" : "bg-[#EF4444]"
-                          }`} />
-                          <span>{order.status}</span>
+                        <span className={`inline-flex items-center space-x-1.5 rounded-full px-2.5 py-0.5 text-[10px] font-bold capitalize ${STATUS_STYLE[order.status] ?? "bg-slate-50 text-slate-400 border border-slate-100"}`}>
+                          {order.status.replace(/_/g, " ")}
                         </span>
                       </td>
-
-                      <td className="py-4 px-6 font-bold font-mono text-slate-900 text-[13px]">
-                        {order.amount}
-                      </td>
-
-                      <td className="py-4 px-6 whitespace-nowrap">
-                        <div className="text-slate-700 font-semibold">{order.date}</div>
-                        <div className="text-[10px] text-slate-400 font-mono font-bold mt-0.5">{order.time}</div>
-                      </td>
-
-                      <td className="py-4 px-6 text-center">
-                        <button className="inline-flex h-7 w-7 items-center justify-center rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors">
-                          <MoreVertical className="h-4 w-4" />
-                        </button>
+                      <td className="py-4 px-6 font-bold font-mono text-slate-900">${parseFloat(order.amount).toFixed(2)}</td>
+                      <td className="py-4 px-6 whitespace-nowrap text-slate-400">{new Date(order.created_at).toLocaleString()}</td>
+                      <td className="py-4 px-6">
+                        <div className="flex items-center justify-center gap-1">
+                          <Link href={`/admin/orders/${order.order_id}`} className="inline-flex h-7 w-7 items-center justify-center rounded-lg text-slate-400 hover:bg-slate-100 hover:text-[#4F46E5]">
+                            <Eye className="h-3.5 w-3.5" />
+                          </Link>
+                          {order.status === "failed" && order.type === "smm" && (
+                            <button
+                              onClick={() => handleRetry(order.order_id)}
+                              disabled={actionLoading === order.order_id}
+                              className="inline-flex h-7 w-7 items-center justify-center rounded-lg text-slate-400 hover:bg-amber-50 hover:text-amber-600 disabled:opacity-40"
+                              title="Retry"
+                            >
+                              <RefreshCw className="h-3.5 w-3.5" />
+                            </button>
+                          )}
+                          {!["pending_payment", "refunded"].includes(order.status) && (
+                            <button
+                              onClick={() => handleRefund(order.order_id)}
+                              disabled={actionLoading === order.order_id}
+                              className="inline-flex h-7 w-7 items-center justify-center rounded-lg text-slate-400 hover:bg-rose-50 hover:text-rose-500 disabled:opacity-40"
+                              title="Refund"
+                            >
+                              <XCircle className="h-3.5 w-3.5" />
+                            </button>
+                          )}
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -297,43 +261,26 @@ export default function OrdersManagement() {
               </table>
             </div>
 
-            {/* PAGINATION */}
             <div className="p-4 border-t border-slate-50 flex flex-col sm:flex-row gap-4 items-center justify-between bg-white text-xs font-semibold text-slate-400">
               <div>
-                Showing <span className="text-slate-800 font-bold">1</span> to{" "}
-                <span className="text-slate-800 font-bold">5</span> of{" "}
-                <span className="text-slate-800 font-bold">12,403</span> results
+                Showing <span className="text-slate-800 font-bold">{(page - 1) * pageSize + 1}</span>–
+                <span className="text-slate-800 font-bold">{Math.min(page * pageSize, count)}</span> of{" "}
+                <span className="text-slate-800 font-bold">{count.toLocaleString()}</span> results
               </div>
-
               <div className="flex items-center space-x-1">
-                <button className="rounded-xl border border-slate-200 px-3 py-1.5 text-xs text-slate-300 font-bold cursor-not-allowed bg-slate-50/50">
-                  Previous
-                </button>
-
-                <button className="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-[#4F46E5] text-xs font-bold text-white shadow-sm">
-                  1
-                </button>
-
-                <button className="inline-flex h-8 w-8 items-center justify-center rounded-xl text-xs text-slate-600 hover:bg-slate-50 font-bold">
-                  2
-                </button>
-
-                <button className="inline-flex h-8 w-8 items-center justify-center rounded-xl text-xs text-slate-600 hover:bg-slate-50 font-bold">
-                  3
-                </button>
-
-                <span className="text-slate-300 font-bold px-1">...</span>
-
-                <button className="inline-flex h-8 w-8 items-center justify-center rounded-xl text-xs text-slate-600 hover:bg-slate-50 font-bold">
-                  248
-                </button>
-
-                <button className="rounded-xl border border-slate-200 px-3 py-1.5 text-xs text-slate-700 font-bold hover:bg-slate-50 transition-colors">
-                  Next
-                </button>
+                <button
+                  onClick={() => setPage((p) => Math.max(p - 1, 1))}
+                  disabled={page === 1}
+                  className="rounded-xl border border-slate-200 px-3 py-1.5 text-xs font-bold disabled:text-slate-300 disabled:bg-slate-50 hover:bg-slate-50"
+                >Previous</button>
+                <span className="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-[#4F46E5] text-xs font-bold text-white">{page}</span>
+                <button
+                  onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
+                  disabled={page >= totalPages}
+                  className="rounded-xl border border-slate-200 px-3 py-1.5 text-xs font-bold disabled:text-slate-300 disabled:bg-slate-50 hover:bg-slate-50"
+                >Next</button>
               </div>
             </div>
-
           </div>
         </main>
       </div>
