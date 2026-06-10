@@ -137,22 +137,22 @@ export default function FAQ() {
       {/* NAVBAR */}
       <header className="sticky top-0 z-50 border-b border-slate-100 bg-white/80 backdrop-blur-md px-6 lg:px-16 py-4 flex items-center justify-between">
         <div className="flex items-center space-x-2">
-          <span className="text-lg font-black tracking-tight text-[#4F46E5]">Nexora</span>
+          <span className="text-lg font-black tracking-tight text-[#4F46E5]">Pulsara</span>
         </div>
         <nav className="flex items-center space-x-8 text-xs font-bold text-slate-500 tracking-wide">
           <Link href="/" className="hover:text-slate-900 transition-colors">Home</Link>
-          <a href="/smm" className="hover:text-slate-900 transition-colors">SMM Services</a>
-          <a href="/otp" className="hover:text-slate-900 transition-colors">OTP Numbers</a>
-          <a href="/track" className="hover:text-slate-900 transition-colors">Track Order</a>
-          <a href="/faq" className="text-[#4F46E5] underline decoration-2 underline-offset-4">FAQ</a>
+          <Link href="/smm" className="hover:text-slate-900 transition-colors">SMM Services</Link>
+          <Link href="/otp" className="hover:text-slate-900 transition-colors">OTP Numbers</Link>
+          <Link href="/track" className="hover:text-slate-900 transition-colors">Track Order</Link>
+          <Link href="/faq" className="text-[#4F46E5] underline decoration-2 underline-offset-4">FAQ</Link>
         </nav>
         <div className="flex items-center space-x-4">
-          <button type="button" className="text-xs font-bold text-slate-600 hover:text-slate-900 transition-colors">
+          <Link href="/admin/login" className="text-xs font-bold text-slate-600 hover:text-slate-900 transition-colors">
             Login
-          </button>
-          <button type="button" className="rounded-xl bg-[#4F46E5] px-4 py-2 text-xs font-bold text-white shadow-sm hover:bg-[#4338CA] transition-colors">
+          </Link>
+          <Link href="/register" className="rounded-xl bg-[#4F46E5] px-4 py-2 text-xs font-bold text-white shadow-sm hover:bg-[#4338CA] transition-colors">
             Sign Up
-          </button>
+          </Link>
           <button type="button" className="text-slate-400 hover:text-slate-600">
             <Globe className="h-4 w-4" />
           </button>
@@ -166,7 +166,7 @@ export default function FAQ() {
             How can we help?
           </h1>
           <p className="text-xs md:text-sm text-slate-400 font-medium max-w-2xl mx-auto leading-relaxed">
-            Search our knowledge base or browse categories below to find answers to common questions about Nexora services.
+            Search our knowledge base or browse categories below to find answers to common questions about Pulsara services.
           </p>
         </div>
 

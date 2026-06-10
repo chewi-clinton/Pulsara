@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import {
   CheckCircle2,
   Clock,
@@ -23,11 +24,11 @@ export default function SMMOrderStatus() {
 
       {/* MINIMAL NAVBAR */}
       <header className="border-b border-slate-100 bg-white px-6 lg:px-16 py-4 flex items-center justify-between">
-        <span className="text-lg font-black tracking-tight text-[#4F46E5]">Nexora</span>
-        <a href="/track" className="inline-flex items-center space-x-1.5 text-xs font-bold text-slate-500 hover:text-slate-900 transition-colors">
+        <span className="text-lg font-black tracking-tight text-[#4F46E5]">Pulsara</span>
+        <Link href="/track" className="inline-flex items-center space-x-1.5 text-xs font-bold text-slate-500 hover:text-slate-900 transition-colors">
           <ArrowLeft className="h-3.5 w-3.5" />
           <span>Track Another Order</span>
-        </a>
+        </Link>
       </header>
 
       <main className="max-w-3xl mx-auto px-6 py-12 space-y-6">
@@ -77,10 +78,10 @@ export default function SMMOrderStatus() {
             </div>
             <div className="flex justify-between items-start">
               <span className="text-slate-400 font-semibold">Target URL</span>
-              <a href="#" className="font-bold text-[#4F46E5] hover:underline inline-flex items-center space-x-1">
+              <span className="font-bold text-[#4F46E5] inline-flex items-center space-x-1">
                 <span>instagram.com/user</span>
                 <ExternalLink className="h-3 w-3" />
-              </a>
+              </span>
             </div>
             <div className="flex justify-between">
               <span className="text-slate-400 font-semibold">Start Count</span>
@@ -134,7 +135,7 @@ export default function SMMOrderStatus() {
 
         <p className="text-center text-[11px] font-medium text-slate-400">
           Need help?{" "}
-          <a href="/faq" className="font-bold text-[#4F46E5] hover:underline">Visit our FAQ</a>{" "}
+          <Link href="/faq" className="font-bold text-[#4F46E5] hover:underline">Visit our FAQ</Link>{" "}
           or contact support.
         </p>
       </main>

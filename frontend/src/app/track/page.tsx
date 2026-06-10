@@ -1,16 +1,20 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Truck, ArrowRight, Hash } from "lucide-react";
 import Footer from "../../components/Footer";
 
 export default function TrackOrder() {
+  const router = useRouter();
   const [orderId, setOrderId] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!orderId.trim()) return;
-    console.log("Tracking order payload ID:", orderId);
+    const id = orderId.trim();
+    if (!id) return;
+    const type = id.toLowerCase().includes("otp") ? "otp" : "smm";
+    router.push(`/order/${type}/${id}`);
   };
 
   return (
