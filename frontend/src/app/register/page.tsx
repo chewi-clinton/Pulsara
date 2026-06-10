@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   User,
   Mail,
@@ -10,9 +11,13 @@ import {
   EyeOff,
   ArrowRight,
   ShieldCheck,
+  AlertCircle,
+  Loader2,
 } from "lucide-react";
+import { api } from "../../lib/api";
 
 export default function Register() {
+  const router = useRouter();
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -20,13 +25,26 @@ export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [agreed, setAgreed] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   const passwordsMatch = confirmPassword === "" || password === confirmPassword;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (password !== confirmPassword) return;
-    console.log("Creating account...", { fullName, email });
+    setError("");
+    setLoading(true);
+    try {
+      await api.auth.register(fullName, email, password);
+      setSuccess("Account created! Redirecting to sign in…");
+      setTimeout(() => router.push("/admin/login"), 1500);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Registration failed.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -187,13 +205,26 @@ export default function Register() {
               </span>
             </div>
 
+            {error && (
+              <div className="flex items-center space-x-2 rounded-xl border border-rose-100 bg-rose-50 px-4 py-3 text-xs font-semibold text-rose-600">
+                <AlertCircle className="h-4 w-4 shrink-0" />
+                <span>{error}</span>
+              </div>
+            )}
+            {success && (
+              <div className="rounded-xl border border-emerald-100 bg-emerald-50 px-4 py-3 text-xs font-semibold text-emerald-600 text-center">
+                {success}
+              </div>
+            )}
+
             <div className="pt-2">
               <button
                 type="submit"
-                disabled={!agreed || !passwordsMatch}
+                disabled={!agreed || !passwordsMatch || loading}
                 className="flex w-full items-center justify-center space-x-2 rounded-xl bg-[#4F46E5] py-3.5 text-sm font-bold text-white shadow-md hover:bg-[#4338CA] transition-all hover:shadow-lg active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-[#4F46E5] disabled:active:scale-100"
               >
-                <span>Create Account</span>
+                {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
+                <span>{loading ? "Creating account…" : "Create Account"}</span>
                 <ArrowRight className="h-4 w-4 stroke-[2.5]" />
               </button>
             </div>

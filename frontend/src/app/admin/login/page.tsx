@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   Mail,
   Lock,
@@ -9,17 +10,34 @@ import {
   EyeOff,
   LogIn,
   ShieldCheck,
+  AlertCircle,
+  Loader2,
 } from "lucide-react";
+import { api } from "../../../lib/api";
 
 export default function ConsoleLogin() {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [rememberDevice, setRememberDevice] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Authenticating...", { email, rememberDevice });
+    setError("");
+    setLoading(true);
+    try {
+      const { access, refresh } = await api.auth.login(email, password);
+      localStorage.setItem("access_token", access);
+      if (rememberDevice) localStorage.setItem("refresh_token", refresh);
+      router.push("/admin/dashboard");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Invalid credentials.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -124,13 +142,21 @@ export default function ConsoleLogin() {
               </span>
             </div>
 
+            {error && (
+              <div className="flex items-center space-x-2 rounded-xl border border-rose-100 bg-rose-50 px-4 py-3 text-xs font-semibold text-rose-600">
+                <AlertCircle className="h-4 w-4 shrink-0" />
+                <span>{error}</span>
+              </div>
+            )}
+
             <div className="pt-2">
               <button
                 type="submit"
-                className="flex w-full items-center justify-center space-x-2 rounded-xl bg-[#4F46E5] py-3.5 text-sm font-bold text-white shadow-md hover:bg-[#4338CA] transition-all hover:shadow-lg active:scale-[0.99]"
+                disabled={loading}
+                className="flex w-full items-center justify-center space-x-2 rounded-xl bg-[#4F46E5] py-3.5 text-sm font-bold text-white shadow-md hover:bg-[#4338CA] transition-all hover:shadow-lg active:scale-[0.99] disabled:opacity-60"
               >
-                <span>Sign In</span>
-                <LogIn className="h-4 w-4 stroke-[2.5]" />
+                {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <LogIn className="h-4 w-4 stroke-[2.5]" />}
+                <span>{loading ? "Signing in…" : "Sign In"}</span>
               </button>
             </div>
 

@@ -18,7 +18,8 @@ export default function TrackOrder() {
   };
 
   return (
-    <div className="flex min-h-[450px] w-full items-center justify-center bg-[#F8FAFC] px-4 py-16 font-sans antialiased text-slate-900">
+    <div className="flex flex-col min-h-screen w-full bg-[#F8FAFC] font-sans antialiased text-slate-900">
+      <div className="flex flex-1 items-center justify-center px-4 py-16">
       <div className="w-full max-w-3xl text-center space-y-8">
 
         {/* HEADER */}
@@ -65,6 +66,7 @@ export default function TrackOrder() {
           </form>
         </div>
 
+      </div>
       </div>
       <Footer />
     </div>
