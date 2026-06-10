@@ -120,15 +120,15 @@ export default function PaymentPage() {
     );
   }
 
-  // Flutterwave verifying
-  if (method === "flutterwave" && verifying) {
+  // NotchPay verifying
+  if (method === "notchpay" && verifying) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-[#F8FAFC] font-sans antialiased px-4">
         <div className="w-full max-w-sm text-center space-y-5">
           <Loader2 className="h-10 w-10 animate-spin text-[#4F46E5] mx-auto" />
           <h1 className="text-lg font-extrabold text-[#0F172A]">Verifying Payment</h1>
           <p className="text-xs text-slate-400 font-medium leading-relaxed">
-            Please wait while we confirm your payment with Flutterwave.
+            Please wait while we confirm your payment with NotchPay.
             This usually takes a few seconds.
           </p>
           <p className="text-[10px] font-semibold text-slate-300">Order: {orderId}</p>

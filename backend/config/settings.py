@@ -163,11 +163,15 @@ CELERY_RESULT_SERIALIZER = "json"
 CELERY_TIMEZONE = TIME_ZONE
 
 
-# Email (Resend SMTP)
+# Email (Brevo SMTP)
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-RESEND_API_KEY = config("RESEND_API_KEY", default="")
-DEFAULT_FROM_EMAIL = config("DEFAULT_FROM_EMAIL", default="noreply@nexora.app")
+EMAIL_HOST = "smtp-relay.brevo.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = config("BREVO_SMTP_USER", default="")
+EMAIL_HOST_PASSWORD = config("BREVO_SMTP_KEY", default="")
+DEFAULT_FROM_EMAIL = config("DEFAULT_FROM_EMAIL", default="noreply@pulsara.app")
 
 
 # Provider & payment credentials (read at runtime via apps.providers / apps.payments clients)
@@ -178,6 +182,5 @@ SMSPOOL_API_KEY = config("SMSPOOL_API_KEY", default="")
 FIVESIM_API_KEY = config("FIVESIM_API_KEY", default="")
 CRYPTOMUS_MERCHANT_ID = config("CRYPTOMUS_MERCHANT_ID", default="")
 CRYPTOMUS_PAYMENT_KEY = config("CRYPTOMUS_PAYMENT_KEY", default="")
-FLUTTERWAVE_PUBLIC_KEY = config("FLUTTERWAVE_PUBLIC_KEY", default="")
-FLUTTERWAVE_SECRET_KEY = config("FLUTTERWAVE_SECRET_KEY", default="")
-FLUTTERWAVE_WEBHOOK_HASH = config("FLUTTERWAVE_WEBHOOK_HASH", default="")
+NOTCHPAY_PUBLIC_KEY = config("NOTCHPAY_PUBLIC_KEY", default="")
+NOTCHPAY_SECRET_KEY = config("NOTCHPAY_SECRET_KEY", default="")

@@ -4,7 +4,7 @@ from apps.services.models import OTPService, SMMService
 
 PAYMENT_METHOD_CHOICES = [
     ("cryptomus", "CryptoMus"),
-    ("flutterwave", "Flutterwave"),
+    ("notchpay", "NotchPay"),
 ]
 
 SMM_STATUS_CHOICES = [

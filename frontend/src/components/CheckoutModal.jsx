@@ -133,15 +133,15 @@ export default function CheckoutModal() {
 
               <button
                 type="button"
-                onClick={() => setPaymentMethod("flutterwave")}
+                onClick={() => setPaymentMethod("notchpay")}
                 className={`flex items-center justify-center space-x-2 rounded-xl border py-3 text-xs font-bold transition-all ${
-                  paymentMethod === "flutterwave"
+                  paymentMethod === "notchpay"
                     ? "border-[#4F46E5] bg-[#F5F3FF] text-slate-900 ring-1 ring-[#4F46E5]"
                     : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
                 }`}
               >
                 <CreditCard className="h-4 w-4 stroke-[2.5]" />
-                <span>Flutterwave</span>
+                <span>NotchPay</span>
               </button>
             </div>
           </div>

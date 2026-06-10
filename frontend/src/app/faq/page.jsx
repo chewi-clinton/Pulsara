@@ -76,7 +76,7 @@ export default function FAQ() {
         {
           id: "pay-1",
           question: "What payment methods do you accept?",
-          answer: "We support decentralized transactions via CryptoMus (Bitcoin, Tether, Ethereum, Litecoin) as well as global card and regional mobile money frameworks via Flutterwave."
+          answer: "We support decentralized transactions via CryptoMus (Bitcoin, Tether, Ethereum, Litecoin) as well as card and mobile money payments (MTN MoMo, Orange Money) via NotchPay."
         }
       ]
     },

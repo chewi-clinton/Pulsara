@@ -19,7 +19,7 @@ import { api } from "../../../../lib/api";
 
 const paymentMethods = [
   { id: "cryptomus", label: "Crypto", sub: "BTC, ETH, USDT, LTC", icon: Bitcoin },
-  { id: "flutterwave", label: "Card / Mobile Money", sub: "Visa, Mastercard, MTN, Orange", icon: CreditCard },
+  { id: "notchpay", label: "Card / Mobile Money", sub: "Visa, MTN MoMo, Orange Money", icon: CreditCard },
 ];
 
 export default function SMMCheckout() {
@@ -82,7 +82,7 @@ export default function SMMCheckout() {
         customer_email: email || undefined,
       });
 
-      if (result.payment_method === "flutterwave" && result.redirect_url) {
+      if (result.payment_method === "notchpay" && result.redirect_url) {
         window.location.href = result.redirect_url;
         return;
       }

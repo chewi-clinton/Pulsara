@@ -7,7 +7,7 @@ ORDER_TYPE_CHOICES = [
 
 METHOD_CHOICES = [
     ("cryptomus", "CryptoMus"),
-    ("flutterwave", "Flutterwave"),
+    ("notchpay", "NotchPay"),
 ]
 
 STATUS_CHOICES = [

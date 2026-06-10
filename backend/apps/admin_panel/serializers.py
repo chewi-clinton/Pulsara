@@ -31,6 +31,5 @@ class AdminSettingsSerializer(serializers.Serializer):
     fivesim_api_key = serializers.CharField(required=False, allow_blank=True)
     cryptomus_merchant_id = serializers.CharField(required=False, allow_blank=True)
     cryptomus_payment_key = serializers.CharField(required=False, allow_blank=True)
-    flutterwave_public_key = serializers.CharField(required=False, allow_blank=True)
-    flutterwave_secret_key = serializers.CharField(required=False, allow_blank=True)
-    flutterwave_webhook_hash = serializers.CharField(required=False, allow_blank=True)
+    notchpay_public_key = serializers.CharField(required=False, allow_blank=True)
+    notchpay_secret_key = serializers.CharField(required=False, allow_blank=True)

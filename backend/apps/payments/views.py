@@ -5,7 +5,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from . import cryptomus, flutterwave
+from . import cryptomus, notchpay
 from .models import Payment
 
 log = logging.getLogger(__name__)
@@ -78,34 +78,36 @@ class CryptomusWebhookView(APIView):
         return Response({"detail": "ok"})
 
 
-class FlutterwaveWebhookView(APIView):
-    """POST /api/webhooks/flutterwave/ — verify verif-hash header, mark order paid, trigger fulfilment."""
+class NotchPayWebhookView(APIView):
+    """POST /api/webhooks/notchpay/ — verify HMAC signature, mark order paid, trigger fulfilment."""
 
     permission_classes = [AllowAny]
 
     def post(self, request):
-        if not flutterwave.verify_webhook(request.headers):
-            return Response({"detail": "invalid hash"}, status=status.HTTP_400_BAD_REQUEST)
+        signature = request.headers.get("x-notch-signature", "")
+        if not notchpay.verify_webhook(dict(request.data), signature):
+            return Response({"detail": "invalid signature"}, status=status.HTTP_400_BAD_REQUEST)
 
-        fw_status = (request.data.get("data") or {}).get("status", "")
-        tx_ref = (request.data.get("data") or {}).get("tx_ref", "")
+        transaction = request.data.get("transaction") or {}
+        np_status = transaction.get("status", "")
+        reference = transaction.get("reference", "")
 
-        if not tx_ref:
-            return Response({"detail": "missing tx_ref"}, status=status.HTTP_400_BAD_REQUEST)
+        if not reference:
+            return Response({"detail": "missing reference"}, status=status.HTTP_400_BAD_REQUEST)
 
-        if tx_ref.startswith("smm_"):
+        if reference.startswith("smm_"):
             order_type = "smm"
-        elif tx_ref.startswith("otp_"):
+        elif reference.startswith("otp_"):
             order_type = "otp"
         else:
             return Response({"detail": "unknown order type"}, status=status.HTTP_400_BAD_REQUEST)
 
-        Payment.objects.filter(order_type=order_type, provider_ref=tx_ref).update(
-            status="paid" if fw_status == "successful" else "failed",
+        Payment.objects.filter(order_type=order_type, provider_ref=reference).update(
+            status="paid" if np_status == "complete" else "failed",
             webhook_payload=request.data,
         )
 
-        if fw_status == "successful":
-            _fulfill(order_type, tx_ref)
+        if np_status == "complete":
+            _fulfill(order_type, reference)
 
         return Response({"detail": "ok"})

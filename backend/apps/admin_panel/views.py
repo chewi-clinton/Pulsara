@@ -444,7 +444,7 @@ class AdminSettingsView(APIView):
     _FIELDS = [
         "smmfollowers_api_key", "smspool_api_key", "fivesim_api_key",
         "cryptomus_merchant_id", "cryptomus_payment_key",
-        "flutterwave_public_key", "flutterwave_secret_key", "flutterwave_webhook_hash",
+        "notchpay_public_key", "notchpay_secret_key",
     ]
 
     def get(self, request):

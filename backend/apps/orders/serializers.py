@@ -7,7 +7,7 @@ class SMMOrderCreateSerializer(serializers.Serializer):
     service_id = serializers.IntegerField()
     target_url = serializers.URLField()
     quantity = serializers.IntegerField()
-    payment_method = serializers.ChoiceField(choices=["cryptomus", "flutterwave"])
+    payment_method = serializers.ChoiceField(choices=["cryptomus", "notchpay"])
     customer_email = serializers.EmailField(required=False, allow_blank=True)
 
 
@@ -35,7 +35,7 @@ class SMMOrderStatusSerializer(serializers.ModelSerializer):
 class OTPOrderCreateSerializer(serializers.Serializer):
     service_id = serializers.IntegerField()
     platform = serializers.CharField(required=False, allow_blank=True)
-    payment_method = serializers.ChoiceField(choices=["cryptomus", "flutterwave"])
+    payment_method = serializers.ChoiceField(choices=["cryptomus", "notchpay"])
     customer_email = serializers.EmailField(required=False, allow_blank=True)
 
 

@@ -45,9 +45,8 @@ export default function SystemSettings() {
     fivesim_api_key: { ...INITIAL_KEY },
     cryptomus_merchant_id: { ...INITIAL_KEY },
     cryptomus_payment_key: { ...INITIAL_KEY },
-    flutterwave_public_key: { ...INITIAL_KEY },
-    flutterwave_secret_key: { ...INITIAL_KEY },
-    flutterwave_webhook_hash: { ...INITIAL_KEY },
+    notchpay_public_key: { ...INITIAL_KEY },
+    notchpay_secret_key: { ...INITIAL_KEY },
   });
 
   useEffect(() => {
@@ -248,19 +247,15 @@ export default function SystemSettings() {
                     </div>
                   </div>
                   <div className="space-y-3 pt-5">
-                    <h4 className="text-xs font-extrabold text-slate-800">Flutterwave</h4>
+                    <h4 className="text-xs font-extrabold text-slate-800">NotchPay</h4>
                     <div className="space-y-3">
                       <div className="space-y-1.5">
                         <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Public Key</label>
-                        <KeyInput field="flutterwave_public_key" placeholder="Enter Flutterwave Public Key" />
+                        <KeyInput field="notchpay_public_key" placeholder="Enter NotchPay Public Key" />
                       </div>
                       <div className="space-y-1.5">
                         <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Secret Key</label>
-                        <KeyInput field="flutterwave_secret_key" placeholder="Enter Flutterwave Secret Key" />
-                      </div>
-                      <div className="space-y-1.5">
-                        <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wide">Webhook Hash</label>
-                        <KeyInput field="flutterwave_webhook_hash" placeholder="Enter Webhook Hash" />
+                        <KeyInput field="notchpay_secret_key" placeholder="Enter NotchPay Secret Key" />
                       </div>
                     </div>
                   </div>

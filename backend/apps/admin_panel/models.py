@@ -9,9 +9,8 @@ class SiteSettings(models.Model):
     fivesim_api_key = models.CharField(max_length=255, blank=True)
     cryptomus_merchant_id = models.CharField(max_length=255, blank=True)
     cryptomus_payment_key = models.CharField(max_length=255, blank=True)
-    flutterwave_public_key = models.CharField(max_length=255, blank=True)
-    flutterwave_secret_key = models.CharField(max_length=255, blank=True)
-    flutterwave_webhook_hash = models.CharField(max_length=255, blank=True)
+    notchpay_public_key = models.CharField(max_length=255, blank=True)
+    notchpay_secret_key = models.CharField(max_length=255, blank=True)
 
     class Meta:
         verbose_name = "Site Settings"

@@ -7,7 +7,7 @@ from rest_framework.generics import RetrieveAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from apps.payments import cryptomus, flutterwave
+from apps.payments import cryptomus, notchpay
 from apps.payments.models import Payment
 from apps.services.models import OTPService, SMMService
 
@@ -51,31 +51,31 @@ def _create_payment(order_type, order_pk, amount, payment_method, customer_email
             },
         }
 
-    if payment_method == "flutterwave":
-        redirect_url = (
+    if payment_method == "notchpay":
+        callback_url = (
             f"{settings.FRONTEND_URL}/payment"
-            f"?order_id={order_id_str}&method=flutterwave&verifying=1"
+            f"?order_id={order_id_str}&method=notchpay&verifying=1"
         )
-        pay = flutterwave.create_payment(
-            tx_ref=order_id_str,
+        pay = notchpay.create_payment(
+            reference=order_id_str,
             amount=amount_str,
-            redirect_url=redirect_url,
+            callback_url=callback_url,
             customer_email=customer_email,
         )
-        fw_url = pay["data"]["link"]
+        np_url = pay["transaction"]["authorization_url"]
         Payment.objects.create(
             order_type=order_type,
             order_id=order_pk,
             amount=amount,
             currency="USD",
-            method="flutterwave",
+            method="notchpay",
             provider_ref=order_id_str,
         )
         return {
             "order_id": order_id_str,
             "amount": amount_str,
-            "payment_method": "flutterwave",
-            "redirect_url": fw_url,
+            "payment_method": "notchpay",
+            "redirect_url": np_url,
         }
 
     raise ValueError(f"Unsupported payment method: {payment_method}")
