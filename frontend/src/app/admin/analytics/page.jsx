@@ -19,9 +19,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
-import { api, type AdminAnalyticsData } from "../../../lib/api";
-
-type Period = "7d" | "30d" | "90d" | "all";
+import { api } from "../../../lib/api";
 
 const sidebarLinks = [
   { name: "Dashboard", href: "/admin/dashboard", icon: <LayoutDashboard className="h-4 w-4" /> },
@@ -30,7 +28,7 @@ const sidebarLinks = [
   { name: "Settings", href: "/admin/settings", icon: <Settings className="h-4 w-4" /> },
 ];
 
-const PERIOD_LABELS: Record<Period, string> = {
+const PERIOD_LABELS = {
   "7d": "Last 7 Days",
   "30d": "Last 30 Days",
   "90d": "Last 90 Days",
@@ -39,8 +37,8 @@ const PERIOD_LABELS: Record<Period, string> = {
 
 export default function AdminAnalytics() {
   const router = useRouter();
-  const [period, setPeriod] = useState<Period>("30d");
-  const [data, setData] = useState<AdminAnalyticsData | null>(null);
+  const [period, setPeriod] = useState("30d");
+  const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -48,7 +46,7 @@ export default function AdminAnalytics() {
     setLoading(true);
     api.admin.analytics(period)
       .then(setData)
-      .catch((e: Error) => {
+      .catch((e) => {
         if (e.message.includes("401") || e.message.toLowerCase().includes("session")) router.push("/admin/login");
         else setError(e.message);
       })
@@ -145,7 +143,7 @@ export default function AdminAnalytics() {
             <div className="flex items-center space-x-2 self-start sm:self-auto">
               <Calendar className="h-4 w-4 text-slate-400" />
               <div className="flex items-center rounded-xl border border-slate-200 bg-white overflow-hidden shadow-sm">
-                {(Object.keys(PERIOD_LABELS) as Period[]).map((p) => (
+                {Object.keys(PERIOD_LABELS).map((p) => (
                   <button
                     key={p}
                     onClick={() => setPeriod(p)}
@@ -214,7 +212,7 @@ export default function AdminAnalytics() {
                         <YAxis tick={{ fontSize: 10, fontWeight: 700, fill: "#94A3B8" }} axisLine={false} tickLine={false} tickFormatter={(v) => `$${v}`} />
                         <Tooltip
                           contentStyle={{ fontSize: 11, fontWeight: 700, borderRadius: 12, border: "1px solid #E2E8F0" }}
-                          formatter={(value: number, name: string) => [`$${value.toFixed(2)}`, name === "smm" ? "SMM" : "OTP"]}
+                          formatter={(value, name) => [`$${value.toFixed(2)}`, name === "smm" ? "SMM" : "OTP"]}
                         />
                         <Area type="monotone" dataKey="smm" stroke="#4F46E5" strokeWidth={2} fill="url(#smmGrad)" dot={false} activeDot={{ r: 4, fill: "#4F46E5" }} />
                         <Area type="monotone" dataKey="otp" stroke="#10B981" strokeWidth={2} fill="url(#otpGrad)" dot={false} activeDot={{ r: 4, fill: "#10B981" }} />

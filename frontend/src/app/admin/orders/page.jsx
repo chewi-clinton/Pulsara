@@ -19,9 +19,9 @@ import {
   XCircle,
 } from "lucide-react";
 import Link from "next/link";
-import { api, type AdminOrderItem } from "../../../lib/api";
+import { api } from "../../../lib/api";
 
-const STATUS_STYLE: Record<string, string> = {
+const STATUS_STYLE = {
   completed: "bg-[#ECFDF5] text-[#10B981] border border-[#D1FAE5]",
   paid: "bg-[#ECFDF5] text-[#10B981] border border-[#D1FAE5]",
   received: "bg-[#ECFDF5] text-[#10B981] border border-[#D1FAE5]",
@@ -47,7 +47,7 @@ const ALL_TYPES = [{ value: "all", label: "All Types" }, { value: "smm", label: 
 
 export default function OrdersManagement() {
   const router = useRouter();
-  const [orders, setOrders] = useState<AdminOrderItem[]>([]);
+  const [orders, setOrders] = useState([]);
   const [count, setCount] = useState(0);
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
@@ -55,20 +55,20 @@ export default function OrdersManagement() {
   const [typeFilter, setTypeFilter] = useState("all");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [actionLoading, setActionLoading] = useState<string | null>(null);
+  const [actionLoading, setActionLoading] = useState(null);
 
   const pageSize = 20;
   const totalPages = Math.ceil(count / pageSize);
 
   const load = useCallback((p = page) => {
     setLoading(true);
-    const params: Record<string, string> = { page: String(p) };
+    const params = { page: String(p) };
     if (search) params.search = search;
     if (statusFilter) params.status = statusFilter;
     if (typeFilter !== "all") params.type = typeFilter;
     api.admin.orders(params)
       .then((res) => { setOrders(res.results); setCount(res.count); })
-      .catch((e: Error) => {
+      .catch((e) => {
         if (e.message.includes("401") || e.message.toLowerCase().includes("session")) router.push("/admin/login");
         else setError(e.message);
       })
@@ -78,25 +78,25 @@ export default function OrdersManagement() {
   useEffect(() => { load(1); setPage(1); }, [search, statusFilter, typeFilter]); // eslint-disable-line
   useEffect(() => { load(page); }, [page]); // eslint-disable-line
 
-  const handleRefund = async (orderId: string) => {
+  const handleRefund = async (orderId) => {
     setActionLoading(orderId);
     try {
       await api.admin.refundOrder(orderId);
       load(page);
-    } catch (e: unknown) {
-      alert((e as Error).message);
+    } catch (e) {
+      alert(e.message);
     } finally {
       setActionLoading(null);
     }
   };
 
-  const handleRetry = async (orderId: string) => {
+  const handleRetry = async (orderId) => {
     setActionLoading(orderId);
     try {
       await api.admin.retryOrder(orderId);
       load(page);
-    } catch (e: unknown) {
-      alert((e as Error).message);
+    } catch (e) {
+      alert(e.message);
     } finally {
       setActionLoading(null);
     }

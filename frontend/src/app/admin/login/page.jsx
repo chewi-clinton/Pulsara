@@ -24,7 +24,7 @@ export default function ConsoleLogin() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setLoading(true);
@@ -33,7 +33,7 @@ export default function ConsoleLogin() {
       localStorage.setItem("access_token", access);
       if (rememberDevice) localStorage.setItem("refresh_token", refresh);
       router.push("/admin/dashboard");
-    } catch (err: unknown) {
+    } catch (err) {
       setError(err instanceof Error ? err.message : "Invalid credentials.");
     } finally {
       setLoading(false);

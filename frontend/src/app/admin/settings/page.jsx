@@ -21,7 +21,7 @@ import {
   Loader2,
 } from "lucide-react";
 import Link from "next/link";
-import { api, type AdminSettingsPayload } from "../../../lib/api";
+import { api } from "../../../lib/api";
 
 const sidebarLinks = [
   { name: "Dashboard", href: "/admin/dashboard", icon: <LayoutDashboard className="h-4 w-4" /> },
@@ -30,15 +30,7 @@ const sidebarLinks = [
   { name: "Settings", href: "/admin/settings", icon: <Settings className="h-4 w-4" /> },
 ];
 
-type KeyField = keyof AdminSettingsPayload;
-
-interface KeyState {
-  value: string;
-  show: boolean;
-  configured: boolean;
-}
-
-const INITIAL_KEY: KeyState = { value: "", show: false, configured: false };
+const INITIAL_KEY = { value: "", show: false, configured: false };
 
 export default function SystemSettings() {
   const router = useRouter();
@@ -47,7 +39,7 @@ export default function SystemSettings() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  const [keys, setKeys] = useState<Record<KeyField, KeyState>>({
+  const [keys, setKeys] = useState({
     smmfollowers_api_key: { ...INITIAL_KEY },
     smspool_api_key: { ...INITIAL_KEY },
     fivesim_api_key: { ...INITIAL_KEY },
@@ -63,43 +55,42 @@ export default function SystemSettings() {
       .then((data) => {
         setKeys((prev) => {
           const next = { ...prev };
-          (Object.keys(data) as KeyField[]).forEach((k) => {
-            next[k] = { ...next[k], configured: data[k] as unknown as boolean };
+          Object.keys(data).forEach((k) => {
+            next[k] = { ...next[k], configured: data[k] };
           });
           return next;
         });
       })
-      .catch((e: Error) => {
+      .catch((e) => {
         if (e.message.includes("401") || e.message.toLowerCase().includes("session")) router.push("/admin/login");
         else setError(e.message);
       })
       .finally(() => setLoading(false));
   }, [router]);
 
-  const setKey = (field: KeyField, patch: Partial<KeyState>) =>
+  const setKey = (field, patch) =>
     setKeys((prev) => ({ ...prev, [field]: { ...prev[field], ...patch } }));
 
   const handleSave = async () => {
     setSaving(true);
     setError("");
     setSuccess("");
-    const payload: Partial<AdminSettingsPayload> = {};
-    (Object.keys(keys) as KeyField[]).forEach((k) => {
-      if (keys[k].value) (payload as Record<KeyField, string>)[k] = keys[k].value;
+    const payload = {};
+    Object.keys(keys).forEach((k) => {
+      if (keys[k].value) payload[k] = keys[k].value;
     });
     try {
       await api.admin.saveSettings(payload);
       setSuccess("Settings saved successfully.");
-      // Mark newly saved keys as configured and clear inputs
       setKeys((prev) => {
         const next = { ...prev };
-        (Object.keys(payload) as KeyField[]).forEach((k) => {
+        Object.keys(payload).forEach((k) => {
           next[k] = { value: "", show: false, configured: true };
         });
         return next;
       });
-    } catch (e: unknown) {
-      setError((e as Error).message);
+    } catch (e) {
+      setError(e.message);
     } finally {
       setSaving(false);
     }
@@ -108,7 +99,7 @@ export default function SystemSettings() {
   const handleDiscard = () => {
     setKeys((prev) => {
       const next = { ...prev };
-      (Object.keys(next) as KeyField[]).forEach((k) => {
+      Object.keys(next).forEach((k) => {
         next[k] = { ...next[k], value: "" };
       });
       return next;
@@ -123,7 +114,7 @@ export default function SystemSettings() {
     router.push("/admin/login");
   };
 
-  const KeyInput = ({ field, placeholder }: { field: KeyField; placeholder: string }) => {
+  const KeyInput = ({ field, placeholder }) => {
     const k = keys[field];
     return (
       <div className="flex gap-2">

@@ -23,9 +23,9 @@ import {
   Loader2,
 } from "lucide-react";
 import Link from "next/link";
-import { api, type AdminDashboardData, type AdminOrderItem } from "../../../lib/api";
+import { api } from "../../../lib/api";
 
-const STATUS_STYLE: Record<string, string> = {
+const STATUS_STYLE = {
   completed: "bg-emerald-50 text-emerald-600 border-emerald-100",
   paid: "bg-emerald-50 text-emerald-600 border-emerald-100",
   processing: "bg-amber-50 text-amber-600 border-amber-100",
@@ -48,13 +48,13 @@ const sidebarLinks = [
 
 export default function AdminDashboard() {
   const router = useRouter();
-  const [data, setData] = useState<AdminDashboardData | null>(null);
+  const [data, setData] = useState(null);
   const [error, setError] = useState("");
 
   useEffect(() => {
     api.admin.dashboard()
       .then(setData)
-      .catch((e: Error) => {
+      .catch((e) => {
         if (e.message.includes("401") || e.message.toLowerCase().includes("session")) {
           router.push("/admin/login");
         } else {
@@ -200,7 +200,7 @@ export default function AdminDashboard() {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100 bg-white text-slate-700">
-                      {data.recent_orders.map((order: AdminOrderItem) => (
+                      {data.recent_orders.map((order) => (
                         <tr key={order.order_id} className="hover:bg-slate-50/50 transition-colors">
                           <td className="px-6 py-4 font-mono font-bold text-slate-400">{order.order_id}</td>
                           <td className="px-6 py-4 font-bold text-slate-900">{order.service_name}</td>

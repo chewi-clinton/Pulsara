@@ -16,35 +16,28 @@ import {
   MoreVertical,
   CheckCircle2,
   XCircle,
-  ThumbsUp,
-  UserPlus,
-  Eye,
-  Play,
+  Radio,
+  AlertTriangle,
 } from "lucide-react";
 
-interface SMMService {
-  id: string;
-  providerServiceId: string;
-  name: string;
-  category: string;
-  platform: string;
-  icon: React.ReactNode;
-  ratePerK: string;
-  minOrder: string;
-  maxOrder: string;
-  status: "Active" | "Inactive";
-}
-
-const services: SMMService[] = [
-  { id: "s1", providerServiceId: "45229", name: "Instagram Real Followers — Global HQ", category: "Followers", platform: "Instagram", icon: <UserPlus className="h-3.5 w-3.5 text-pink-500" />, ratePerK: "$2.50", minOrder: "100", maxOrder: "50,000", status: "Active" },
-  { id: "s2", providerServiceId: "45301", name: "Instagram Post Likes — Fast Delivery", category: "Likes", platform: "Instagram", icon: <ThumbsUp className="h-3.5 w-3.5 text-pink-500" />, ratePerK: "$1.20", minOrder: "50", maxOrder: "100,000", status: "Active" },
-  { id: "s3", providerServiceId: "48812", name: "TikTok Followers — Real & Active", category: "Followers", platform: "TikTok", icon: <UserPlus className="h-3.5 w-3.5 text-slate-700" />, ratePerK: "$4.50", minOrder: "100", maxOrder: "30,000", status: "Active" },
-  { id: "s4", providerServiceId: "49103", name: "TikTok Video Views", category: "Views", platform: "TikTok", icon: <Eye className="h-3.5 w-3.5 text-slate-700" />, ratePerK: "$0.40", minOrder: "1,000", maxOrder: "1,000,000", status: "Inactive" },
-  { id: "s5", providerServiceId: "51002", name: "YouTube Views — High Retention", category: "Views", platform: "YouTube", icon: <Play className="h-3.5 w-3.5 text-red-500" />, ratePerK: "$2.40", minOrder: "500", maxOrder: "500,000", status: "Active" },
-  { id: "s6", providerServiceId: "51204", name: "YouTube Likes — Genuine", category: "Likes", platform: "YouTube", icon: <ThumbsUp className="h-3.5 w-3.5 text-red-500" />, ratePerK: "$3.00", minOrder: "100", maxOrder: "50,000", status: "Active" },
+const services = [
+  { id: "o1", country: "United States", flag: "🇺🇸", apps: ["WhatsApp", "Telegram", "Google"], provider: "SMSPool", price: "$0.15", availability: "High", status: "Active" },
+  { id: "o2", country: "United Kingdom", flag: "🇬🇧", apps: ["WhatsApp", "Telegram"], provider: "SMSPool", price: "$0.18", availability: "High", status: "Active" },
+  { id: "o3", country: "India", flag: "🇮🇳", apps: ["WhatsApp", "Google"], provider: "5sim", price: "$0.08", availability: "Medium", status: "Active" },
+  { id: "o4", country: "Russia", flag: "🇷🇺", apps: ["Telegram", "WhatsApp"], provider: "5sim", price: "$0.06", availability: "High", status: "Active" },
+  { id: "o5", country: "Brazil", flag: "🇧🇷", apps: ["WhatsApp", "Instagram"], provider: "SMSPool", price: "$0.10", availability: "Medium", status: "Active" },
+  { id: "o6", country: "Germany", flag: "🇩🇪", apps: ["WhatsApp", "Telegram"], provider: "SMSPool", price: "$0.20", availability: "High", status: "Active" },
+  { id: "o7", country: "France", flag: "🇫🇷", apps: ["WhatsApp", "Telegram"], provider: "5sim", price: "$0.18", availability: "Low", status: "Inactive" },
+  { id: "o8", country: "Nigeria", flag: "🇳🇬", apps: ["WhatsApp", "Facebook"], provider: "SMSPool", price: "$0.09", availability: "Medium", status: "Active" },
 ];
 
-export default function AdminSMMServices() {
+const availabilityStyles = {
+  High: "bg-emerald-50 text-emerald-600 border-emerald-100",
+  Medium: "bg-amber-50 text-amber-600 border-amber-100",
+  Low: "bg-rose-50 text-rose-500 border-rose-100",
+};
+
+export default function AdminOTPServices() {
   const [activeTab, setActiveTab] = useState("Marketplace");
   const [searchQuery, setSearchQuery] = useState("");
   const [syncing, setSyncing] = useState(false);
@@ -59,9 +52,7 @@ export default function AdminSMMServices() {
   ];
 
   const filtered = services.filter(
-    (s) =>
-      s.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      s.platform.toLowerCase().includes(searchQuery.toLowerCase())
+    (s) => s.country.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const handleSync = () => {
@@ -125,16 +116,26 @@ export default function AdminSMMServices() {
 
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div className="space-y-1">
-              <h1 className="text-2xl font-extrabold tracking-tight text-[#0F172A]">SMM Services</h1>
-              <p className="text-xs text-slate-400 font-medium">Manage and sync social media services from SMMFollowers.</p>
+              <h1 className="text-2xl font-extrabold tracking-tight text-[#0F172A]">OTP Services</h1>
+              <p className="text-xs text-slate-400 font-medium">Manage virtual number availability across SMSPool and 5sim providers.</p>
             </div>
-            <button
-              onClick={handleSync}
-              className="inline-flex items-center space-x-2 rounded-xl bg-[#4F46E5] px-4 py-2 text-xs font-bold text-white shadow-sm hover:bg-[#4338CA] transition-colors self-start sm:self-auto"
-            >
-              <RefreshCw className={`h-3.5 w-3.5 stroke-[2.5] ${syncing ? "animate-spin" : ""}`} />
-              <span>{syncing ? "Syncing..." : "Sync from Provider"}</span>
-            </button>
+            <div className="flex items-center space-x-3 self-start sm:self-auto">
+              <div className="flex items-center space-x-2 rounded-xl bg-slate-50 border border-slate-200 px-3 py-2 text-[10px] font-bold text-slate-600">
+                <Radio className="h-3.5 w-3.5 text-emerald-500 animate-pulse" />
+                <span>SMSPool: Online</span>
+              </div>
+              <div className="flex items-center space-x-2 rounded-xl bg-slate-50 border border-slate-200 px-3 py-2 text-[10px] font-bold text-slate-600">
+                <AlertTriangle className="h-3.5 w-3.5 text-amber-400" />
+                <span>5sim: Degraded</span>
+              </div>
+              <button
+                onClick={handleSync}
+                className="inline-flex items-center space-x-2 rounded-xl bg-[#4F46E5] px-4 py-2 text-xs font-bold text-white shadow-sm hover:bg-[#4338CA] transition-colors"
+              >
+                <RefreshCw className={`h-3.5 w-3.5 stroke-[2.5] ${syncing ? "animate-spin" : ""}`} />
+                <span>{syncing ? "Syncing..." : "Sync Providers"}</span>
+              </button>
+            </div>
           </div>
 
           <div className="rounded-2xl border border-slate-100 bg-white shadow-sm overflow-hidden">
@@ -143,7 +144,7 @@ export default function AdminSMMServices() {
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
                 <input
                   type="text"
-                  placeholder="Search services..."
+                  placeholder="Search by country..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full pl-9 pr-4 py-2 text-xs font-medium bg-white rounded-xl border border-slate-200 text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-[#4F46E5] focus:ring-1 focus:ring-[#4F46E5] transition-all"
@@ -155,11 +156,11 @@ export default function AdminSMMServices() {
               <table className="w-full text-left border-collapse">
                 <thead>
                   <tr className="border-b border-slate-100 bg-slate-50/70 text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                    <th className="py-3 px-5">Service</th>
-                    <th className="py-3 px-5">Provider ID</th>
-                    <th className="py-3 px-5">Rate / 1K</th>
-                    <th className="py-3 px-5">Min</th>
-                    <th className="py-3 px-5">Max</th>
+                    <th className="py-3 px-5">Country</th>
+                    <th className="py-3 px-5">Supported Apps</th>
+                    <th className="py-3 px-5">Provider</th>
+                    <th className="py-3 px-5">Price</th>
+                    <th className="py-3 px-5 text-center">Availability</th>
                     <th className="py-3 px-5 text-center">Status</th>
                     <th className="py-3 px-5 text-center">Actions</th>
                   </tr>
@@ -169,30 +170,41 @@ export default function AdminSMMServices() {
                     <tr key={svc.id} className="hover:bg-slate-50/50 transition-colors">
                       <td className="py-4 px-5">
                         <div className="flex items-center space-x-2.5">
-                          <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-slate-50 border border-slate-100">
-                            {svc.icon}
-                          </div>
-                          <div>
-                            <p className="font-bold text-slate-900 leading-tight">{svc.name}</p>
-                            <p className="text-[10px] text-slate-400 font-semibold mt-0.5">{svc.platform} · {svc.category}</p>
-                          </div>
+                          <span className="text-xl leading-none">{svc.flag}</span>
+                          <span className="font-bold text-slate-900">{svc.country}</span>
                         </div>
                       </td>
-                      <td className="py-4 px-5 font-mono font-bold text-slate-500 text-[11px]">
-                        #{svc.providerServiceId}
+                      <td className="py-4 px-5">
+                        <div className="flex flex-wrap gap-1">
+                          {svc.apps.map((app) => (
+                            <span key={app} className="rounded-lg bg-slate-50 border border-slate-100 px-2 py-0.5 text-[10px] font-bold text-slate-600">
+                              {app}
+                            </span>
+                          ))}
+                        </div>
                       </td>
-                      <td className="py-4 px-5 font-mono font-extrabold text-[#4F46E5]">{svc.ratePerK}</td>
-                      <td className="py-4 px-5 font-mono text-slate-700">{svc.minOrder}</td>
-                      <td className="py-4 px-5 font-mono text-slate-700">{svc.maxOrder}</td>
+                      <td className="py-4 px-5">
+                        <span className={`inline-flex items-center rounded-md px-2 py-0.5 text-[10px] font-bold ${
+                          svc.provider === "SMSPool"
+                            ? "bg-indigo-50 text-[#4F46E5] border border-indigo-100"
+                            : "bg-slate-100 text-slate-600 border border-slate-200"
+                        }`}>
+                          {svc.provider}
+                        </span>
+                      </td>
+                      <td className="py-4 px-5 font-mono font-extrabold text-[#4F46E5]">{svc.price}</td>
+                      <td className="py-4 px-5 text-center">
+                        <span className={`inline-flex items-center rounded-md border px-2 py-0.5 text-[10px] font-bold ${availabilityStyles[svc.availability]}`}>
+                          {svc.availability}
+                        </span>
+                      </td>
                       <td className="py-4 px-5 text-center">
                         <span className={`inline-flex items-center space-x-1 rounded-full px-2.5 py-0.5 text-[10px] font-bold border ${
                           svc.status === "Active"
                             ? "bg-emerald-50 text-emerald-600 border-emerald-100"
                             : "bg-slate-100 text-slate-500 border-slate-200"
                         }`}>
-                          {svc.status === "Active"
-                            ? <CheckCircle2 className="h-3 w-3" />
-                            : <XCircle className="h-3 w-3" />}
+                          {svc.status === "Active" ? <CheckCircle2 className="h-3 w-3" /> : <XCircle className="h-3 w-3" />}
                           <span>{svc.status}</span>
                         </span>
                       </td>
