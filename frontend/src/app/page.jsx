@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<"social" | "otp">("social");
+  const [activeTab, setActiveTab] = useState("social");
 
   const platforms = ["TikTok", "Instagram", "WhatsApp", "Telegram", "Discord"];
 

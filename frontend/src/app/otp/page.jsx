@@ -13,30 +13,20 @@ import {
   Zap,
   Loader2,
 } from "lucide-react";
-import { api, type OTPService } from "../../lib/api";
+import { api } from "../../lib/api";
 
 const appFilters = ["All", "WhatsApp", "Telegram", "Google", "Facebook", "Instagram", "Tinder"];
 
 // country_code → flag emoji
-const FLAGS: Record<string, string> = {
+const FLAGS = {
   US: "🇺🇸", GB: "🇬🇧", IN: "🇮🇳", RU: "🇷🇺", BR: "🇧🇷",
   DE: "🇩🇪", FR: "🇫🇷", CA: "🇨🇦", ID: "🇮🇩", NG: "🇳🇬",
   PK: "🇵🇰", PH: "🇵🇭", MX: "🇲🇽", AU: "🇦🇺", JP: "🇯🇵",
   KR: "🇰🇷", TH: "🇹🇭", VN: "🇻🇳", EG: "🇪🇬", ZA: "🇿🇦",
 };
 
-interface CountryGroup {
-  country_code: string;
-  country_name: string;
-  flag: string;
-  apps: string[];
-  provider: string;
-  min_price: number;
-  services: OTPService[];
-}
-
-function groupByCountry(services: OTPService[]): CountryGroup[] {
-  const map = new Map<string, CountryGroup>();
+function groupByCountry(services) {
+  const map = new Map();
   for (const svc of services) {
     const key = svc.country_code;
     if (!map.has(key)) {
@@ -50,7 +40,7 @@ function groupByCountry(services: OTPService[]): CountryGroup[] {
         services: [],
       });
     }
-    const g = map.get(key)!;
+    const g = map.get(key);
     const appName = svc.platform.charAt(0).toUpperCase() + svc.platform.slice(1);
     if (!g.apps.includes(appName)) g.apps.push(appName);
     const price = parseFloat(svc.sell_price);
@@ -61,7 +51,7 @@ function groupByCountry(services: OTPService[]): CountryGroup[] {
 }
 
 export default function OTPPage() {
-  const [groups, setGroups] = useState<CountryGroup[]>([]);
+  const [groups, setGroups] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeApp, setActiveApp] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
@@ -84,7 +74,7 @@ export default function OTPPage() {
     return matchApp && matchSearch;
   });
 
-  function statusFor(g: CountryGroup): "Available" | "High Demand" | "Limited" {
+  function statusFor(g) {
     if (g.services.length <= 1) return "Limited";
     if (g.services.length <= 2) return "High Demand";
     return "Available";

@@ -15,9 +15,9 @@ import {
   Loader2,
   AlertCircle,
 } from "lucide-react";
-import { api, type OTPService } from "../../../../lib/api";
+import { api } from "../../../../lib/api";
 
-const FLAGS: Record<string, string> = {
+const FLAGS = {
   US: "🇺🇸", GB: "🇬🇧", IN: "🇮🇳", RU: "🇷🇺", BR: "🇧🇷",
   DE: "🇩🇪", FR: "🇫🇷", CA: "🇨🇦", ID: "🇮🇩", NG: "🇳🇬",
   PK: "🇵🇰", PH: "🇵🇭", MX: "🇲🇽", AU: "🇦🇺", JP: "🇯🇵",
@@ -33,9 +33,9 @@ export default function OTPCheckout() {
   const params = useParams();
   const countryCode = (Array.isArray(params.id) ? params.id[0] : params.id ?? "").toUpperCase();
 
-  const [services, setServices] = useState<OTPService[]>([]);
+  const [services, setServices] = useState([]);
   const [loadError, setLoadError] = useState("");
-  const [selectedServiceId, setSelectedServiceId] = useState<number | null>(null);
+  const [selectedServiceId, setSelectedServiceId] = useState(null);
   const [payment, setPayment] = useState("cryptomus");
   const [email, setEmail] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -63,7 +63,7 @@ export default function OTPCheckout() {
     Limited: "bg-rose-50 text-rose-500 border-rose-100",
   }[statusLabel];
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!selectedServiceId) return;
     setSubmitError("");
@@ -72,7 +72,7 @@ export default function OTPCheckout() {
       const result = await api.orders.createOtp({
         service_id: selectedServiceId,
         platform: selectedService?.platform,
-        payment_method: payment as "cryptomus" | "flutterwave",
+        payment_method: payment,
         customer_email: email || undefined,
       });
 
@@ -81,13 +81,13 @@ export default function OTPCheckout() {
         return;
       }
 
-      const p = result.payment!;
+      const p = result.payment;
       router.push(
         `/payment?order_id=${result.order_id}&method=cryptomus` +
         `&payment_url=${encodeURIComponent(p.url)}&amount=${result.amount}` +
         `&expires=${p.expires_at}`
       );
-    } catch (err: unknown) {
+    } catch (err) {
       setSubmitError(err instanceof Error ? err.message : "Something went wrong.");
       setSubmitting(false);
     }

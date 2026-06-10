@@ -11,9 +11,9 @@ import {
   ThumbsUp,
   Loader2,
 } from "lucide-react";
-import { api, type SMMOrderStatus } from "../../../../lib/api";
+import { api } from "../../../../lib/api";
 
-const STATUS_STEPS: Record<string, number> = {
+const STATUS_STEPS = {
   pending_payment: 0,
   paid: 1,
   processing: 2,
@@ -23,7 +23,7 @@ const STATUS_STEPS: Record<string, number> = {
   refunded: 3,
 };
 
-const STATUS_LABEL: Record<string, string> = {
+const STATUS_LABEL = {
   pending_payment: "Pending Payment",
   paid: "Paid",
   processing: "Processing",
@@ -33,7 +33,7 @@ const STATUS_LABEL: Record<string, string> = {
   refunded: "Refunded",
 };
 
-const STATUS_BADGE: Record<string, string> = {
+const STATUS_BADGE = {
   pending_payment: "bg-slate-50 text-slate-500 border-slate-200",
   paid: "bg-indigo-50 text-[#4F46E5] border-indigo-100",
   processing: "bg-amber-50 text-amber-600 border-amber-100",
@@ -47,7 +47,7 @@ export default function SMMOrderStatus() {
   const params = useParams();
   const orderId = Array.isArray(params.id) ? params.id[0] : params.id ?? "";
 
-  const [order, setOrder] = useState<SMMOrderStatus | null>(null);
+  const [order, setOrder] = useState(null);
   const [error, setError] = useState("");
 
   useEffect(() => {

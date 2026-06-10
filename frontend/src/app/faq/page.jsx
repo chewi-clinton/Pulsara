@@ -16,27 +16,14 @@ import {
   Globe
 } from "lucide-react";
 
-interface FAQItem {
-  id: string;
-  question: string;
-  answer: React.ReactNode;
-}
-
-interface FAQCategory {
-  id: string;
-  title: string;
-  icon: React.ReactNode;
-  items: FAQItem[];
-}
-
 export default function FAQ() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const [expandedItems, setExpandedItems] = useState<Record<string, boolean>>({
+  const [expandedItems, setExpandedItems] = useState({
     "otp-2": true,
   });
 
-  const categories: FAQCategory[] = useMemo(() => [
+  const categories = useMemo(() => [
     {
       id: "orders",
       title: "Orders & Delivery",
@@ -107,7 +94,7 @@ export default function FAQ() {
     }
   ], []);
 
-  const toggleItem = (id: string) => {
+  const toggleItem = (id) => {
     setExpandedItems((prev) => ({ ...prev, [id]: !prev[id] }));
   };
 

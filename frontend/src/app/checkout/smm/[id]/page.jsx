@@ -15,7 +15,7 @@ import {
   Loader2,
   AlertCircle,
 } from "lucide-react";
-import { api, type SMMService } from "../../../../lib/api";
+import { api } from "../../../../lib/api";
 
 const paymentMethods = [
   { id: "cryptomus", label: "Crypto", sub: "BTC, ETH, USDT, LTC", icon: Bitcoin },
@@ -27,7 +27,7 @@ export default function SMMCheckout() {
   const params = useParams();
   const serviceId = Number(Array.isArray(params.id) ? params.id[0] : params.id);
 
-  const [service, setService] = useState<SMMService | null>(null);
+  const [service, setService] = useState(null);
   const [loadError, setLoadError] = useState("");
   const [targetUrl, setTargetUrl] = useState("");
   const [quantity, setQuantity] = useState(100);
@@ -66,10 +66,10 @@ export default function SMMCheckout() {
 
   const pricePerK = parseFloat(service.sell_per_1000);
   const step = service.min_quantity >= 1000 ? 1000 : service.min_quantity >= 100 ? 100 : 50;
-  const clamp = (v: number) => Math.min(service.max_quantity, Math.max(service.min_quantity, v));
+  const clamp = (v) => Math.min(service.max_quantity, Math.max(service.min_quantity, v));
   const total = ((quantity / 1000) * pricePerK).toFixed(2);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitError("");
     setSubmitting(true);
@@ -78,7 +78,7 @@ export default function SMMCheckout() {
         service_id: service.id,
         target_url: targetUrl,
         quantity,
-        payment_method: payment as "cryptomus" | "flutterwave",
+        payment_method: payment,
         customer_email: email || undefined,
       });
 
@@ -88,13 +88,13 @@ export default function SMMCheckout() {
       }
 
       // Cryptomus: go to our payment page
-      const p = result.payment!;
+      const p = result.payment;
       router.push(
         `/payment?order_id=${result.order_id}&method=cryptomus` +
         `&payment_url=${encodeURIComponent(p.url)}&amount=${result.amount}` +
         `&expires=${p.expires_at}`
       );
-    } catch (err: unknown) {
+    } catch (err) {
       setSubmitError(err instanceof Error ? err.message : "Something went wrong.");
       setSubmitting(false);
     }

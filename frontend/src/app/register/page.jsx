@@ -31,7 +31,7 @@ export default function Register() {
 
   const passwordsMatch = confirmPassword === "" || password === confirmPassword;
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (password !== confirmPassword) return;
     setError("");
@@ -40,7 +40,7 @@ export default function Register() {
       await api.auth.register(fullName, email, password);
       setSuccess("Account created! Redirecting to sign in…");
       setTimeout(() => router.push("/admin/login"), 1500);
-    } catch (err: unknown) {
+    } catch (err) {
       setError(err instanceof Error ? err.message : "Registration failed.");
     } finally {
       setLoading(false);

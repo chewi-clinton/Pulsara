@@ -17,7 +17,7 @@ import {
   Star,
   Loader2,
 } from "lucide-react";
-import { api, type SMMService } from "../../lib/api";
+import { api } from "../../lib/api";
 
 const platformTabs = ["All", "Instagram", "TikTok", "YouTube", "Twitter", "Facebook"];
 
@@ -27,10 +27,10 @@ const qualityColor = {
   Premium: "bg-indigo-50 text-[#4F46E5] border-indigo-100",
 };
 
-function platformIcon(platform: string, category: string) {
+function platformIcon(platform, category) {
   const p = platform.toLowerCase();
   const c = category.toLowerCase();
-  const colorMap: Record<string, string> = {
+  const colorMap = {
     instagram: "text-pink-500",
     tiktok: "text-slate-800",
     youtube: "text-red-500",
@@ -45,18 +45,18 @@ function platformIcon(platform: string, category: string) {
   return <Play className={`h-4 w-4 ${color}`} />;
 }
 
-function qualityLabel(pricePerK: number): "High Quality" | "Standard" | "Premium" {
+function qualityLabel(pricePerK) {
   if (pricePerK >= 4) return "Premium";
   if (pricePerK >= 2) return "High Quality";
   return "Standard";
 }
 
-function cap(s: string) {
+function cap(s) {
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
 export default function SMMPage() {
-  const [services, setServices] = useState<SMMService[]>([]);
+  const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");

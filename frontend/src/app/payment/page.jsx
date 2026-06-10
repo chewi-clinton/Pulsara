@@ -6,19 +6,17 @@ import { CheckCircle2, ExternalLink, Loader2, XCircle } from "lucide-react";
 import Link from "next/link";
 import { api } from "../../lib/api";
 
-type PollStatus = "pending" | "paid" | "processing" | "failed";
+const TERMINAL = ["paid", "processing", "failed"];
 
-const TERMINAL: PollStatus[] = ["paid", "processing", "failed"];
-
-function orderPageUrl(orderId: string) {
+function orderPageUrl(orderId) {
   if (orderId.startsWith("smm_")) return `/order/smm/${orderId}`;
   if (orderId.startsWith("otp_")) return `/order/otp/${orderId}`;
   return "/track";
 }
 
-async function fetchStatus(orderId: string): Promise<PollStatus> {
+async function fetchStatus(orderId) {
   try {
-    let status: string;
+    let status;
     if (orderId.startsWith("smm_")) {
       const data = await api.orders.getSmm(orderId);
       status = data.status;
@@ -47,12 +45,12 @@ export default function PaymentPage() {
   const expiresAt = Number(params.get("expires") ?? 0);
   const verifying = params.get("verifying") === "1";
 
-  const [pollStatus, setPollStatus] = useState<PollStatus>("pending");
-  const [secondsLeft, setSecondsLeft] = useState<number>(() =>
+  const [pollStatus, setPollStatus] = useState("pending");
+  const [secondsLeft, setSecondsLeft] = useState(() =>
     expiresAt ? Math.max(0, expiresAt - Math.floor(Date.now() / 1000)) : 900
   );
-  const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const pollRef = useRef(null);
+  const timerRef = useRef(null);
 
   // Countdown
   useEffect(() => {
@@ -85,7 +83,7 @@ export default function PaymentPage() {
   const secs = String(secondsLeft % 60).padStart(2, "0");
   const expired = secondsLeft === 0;
 
-  // ── Confirmed ──────────────────────────────────────────────────────────────
+  // Confirmed
   if (pollStatus === "paid" || pollStatus === "processing") {
     return (
       <div className="flex min-h-screen items-center justify-center bg-[#F8FAFC] font-sans antialiased px-4">
@@ -101,7 +99,7 @@ export default function PaymentPage() {
     );
   }
 
-  // ── Failed ─────────────────────────────────────────────────────────────────
+  // Failed
   if (pollStatus === "failed") {
     return (
       <div className="flex min-h-screen items-center justify-center bg-[#F8FAFC] font-sans antialiased px-4">
@@ -122,7 +120,7 @@ export default function PaymentPage() {
     );
   }
 
-  // ── Flutterwave verifying ──────────────────────────────────────────────────
+  // Flutterwave verifying
   if (method === "flutterwave" && verifying) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-[#F8FAFC] font-sans antialiased px-4">
@@ -139,7 +137,7 @@ export default function PaymentPage() {
     );
   }
 
-  // ── Cryptomus awaiting ─────────────────────────────────────────────────────
+  // Cryptomus awaiting
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-[#F8FAFC] font-sans antialiased px-4 py-12">
       <div className="w-full max-w-md space-y-6">

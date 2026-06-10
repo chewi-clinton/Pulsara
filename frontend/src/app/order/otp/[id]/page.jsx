@@ -13,13 +13,13 @@ import {
   Radio,
   Loader2,
 } from "lucide-react";
-import { api, type OTPOrderStatus } from "../../../../lib/api";
+import { api } from "../../../../lib/api";
 
 export default function OTPOrderPage() {
   const params = useParams();
   const orderId = Array.isArray(params.id) ? params.id[0] : params.id ?? "";
 
-  const [order, setOrder] = useState<OTPOrderStatus | null>(null);
+  const [order, setOrder] = useState(null);
   const [error, setError] = useState("");
   const [copied, setCopied] = useState(false);
 
@@ -60,7 +60,7 @@ export default function OTPOrderPage() {
       <div className="flex min-h-screen items-center justify-center bg-[#F8FAFC]">
         <div className="text-center space-y-3">
           <p className="text-sm font-bold text-slate-500">{error}</p>
-          <Link href="/track" className="text-xs font-bold text-[#4F46E5] hover:underline">← Track another order</Link>
+          <Link href="/track" className="text-xs font-bold text-[#4F46E5] hover:underline">Arrow Track another order</Link>
         </div>
       </div>
     );
@@ -98,7 +98,6 @@ export default function OTPOrderPage() {
 
       <main className="max-w-2xl mx-auto px-6 py-12 space-y-6">
 
-        {/* Header */}
         <div className="rounded-2xl border border-slate-100 bg-white p-6 shadow-sm space-y-4">
           <div className="flex items-start justify-between flex-wrap gap-3">
             <div className="space-y-1">
@@ -125,7 +124,6 @@ export default function OTPOrderPage() {
           </div>
         </div>
 
-        {/* OTP code — visible once received */}
         {order.otp_code && (
           <div className="rounded-2xl border border-[#4F46E5]/20 bg-white p-6 shadow-sm space-y-3">
             <div className="flex items-center space-x-2">
@@ -141,7 +139,6 @@ export default function OTPOrderPage() {
           </div>
         )}
 
-        {/* Provisioned number */}
         {order.phone_number && (
           <div className="rounded-2xl border border-[#4F46E5]/20 bg-white p-6 shadow-sm space-y-4">
             <div className="flex items-center space-x-2 border-b border-slate-50 pb-3">
@@ -161,7 +158,6 @@ export default function OTPOrderPage() {
           </div>
         )}
 
-        {/* Countdown — only while waiting */}
         {order.status === "waiting_sms" && seconds > 0 && (
           <div className="rounded-2xl border border-slate-100 bg-[#0F172A] p-6 shadow-sm space-y-3 text-white">
             <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Time Remaining</p>
@@ -170,7 +166,6 @@ export default function OTPOrderPage() {
           </div>
         )}
 
-        {/* Message console */}
         <div className="rounded-2xl border border-slate-100 bg-white p-6 shadow-sm space-y-4">
           <div className="flex items-center justify-between border-b border-slate-50 pb-3">
             <h2 className="text-xs font-extrabold uppercase tracking-wider text-slate-700">Status</h2>
@@ -200,7 +195,7 @@ export default function OTPOrderPage() {
         </div>
 
         <p className="text-center text-[11px] font-medium text-slate-400">
-          Didn&apos;t receive a code?{" "}
+          Did not receive a code?{" "}
           <Link href="/faq" className="font-bold text-[#4F46E5] hover:underline">See troubleshooting tips</Link>
         </p>
       </main>

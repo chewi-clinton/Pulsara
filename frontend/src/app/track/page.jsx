@@ -9,7 +9,7 @@ export default function TrackOrder() {
   const router = useRouter();
   const [orderId, setOrderId] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     const id = orderId.trim();
     if (!id) return;
