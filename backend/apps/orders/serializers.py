@@ -55,6 +55,7 @@ class OTPOrderStatusSerializer(serializers.ModelSerializer):
             "otp_code",
             "expires_at",
             "seconds_remaining",
+            "sell_price",
             "payment_method",
         )
 
