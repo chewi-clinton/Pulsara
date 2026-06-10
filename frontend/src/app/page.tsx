@@ -8,9 +8,7 @@ import {
   Zap,
   ShieldCheck,
   BarChart3,
-  Code2,
   ShoppingCart,
-  FileCode2,
   Globe2,
   Globe,
 } from "lucide-react";
@@ -39,15 +37,9 @@ export default function Home() {
       description:
         "Monitor your growth metrics and OTP delivery statuses through our intuitive dashboard.",
     },
-    {
-      icon: <Code2 className="h-5 w-5 text-[#4F46E5]" />,
-      title: "Developer API",
-      description:
-        "Integrate our services directly into your own applications with our robust, documented REST API.",
-    },
   ];
 
-  const steps = [
+  const socialSteps = [
     {
       number: "1",
       title: "Select Service",
@@ -71,12 +63,38 @@ export default function Home() {
     },
   ];
 
+  const otpSteps = [
+    {
+      number: "1",
+      title: "Pick a Country & App",
+      description:
+        "Select the country and the platform you need to verify — WhatsApp, Telegram, Google, and more.",
+      bgClass: "bg-[#E0E7FF] text-[#4F46E5]",
+    },
+    {
+      number: "2",
+      title: "Get Your Number",
+      description:
+        "A real, non-VoIP virtual number is provisioned instantly. No SIM card or personal info required.",
+      bgClass: "bg-[#E0E7FF] text-[#4F46E5]",
+    },
+    {
+      number: "3",
+      title: "Receive the Code",
+      description:
+        "Enter the number in the target app and watch the verification code appear in your dashboard in seconds.",
+      bgClass: "bg-[#4F46E5] text-white",
+    },
+  ];
+
+  const activeSteps = activeTab === "social" ? socialSteps : otpSteps;
+
   return (
     <main className="relative min-h-screen overflow-hidden bg-[#FFFFFF] font-sans text-slate-900">
 
       {/* NAVBAR */}
       <header className="sticky top-0 z-50 border-b border-slate-100 bg-white/80 backdrop-blur-md px-6 lg:px-16 py-4 flex items-center justify-between">
-        <span className="text-lg font-black tracking-tight text-[#4F46E5]">Nexora</span>
+        <span className="text-lg font-black tracking-tight text-[#4F46E5]">Pulsara</span>
         <nav className="flex items-center space-x-8 text-xs font-bold text-slate-500 tracking-wide">
           <Link href="/" className="text-[#4F46E5] underline decoration-2 underline-offset-4">Home</Link>
           <Link href="/smm" className="hover:text-slate-900 transition-colors">SMM Services</Link>
@@ -158,10 +176,6 @@ export default function Home() {
                 <span>Explore Marketplace</span>
                 <ShoppingCart className="h-4 w-4" />
               </Link>
-              <Link href="/faq" className="flex items-center space-x-2 rounded-lg border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-700 shadow-sm transition-colors hover:bg-slate-50">
-                <span>View API Docs</span>
-                <FileCode2 className="h-4 w-4 text-slate-400" />
-              </Link>
             </div>
           </div>
 
@@ -169,7 +183,7 @@ export default function Home() {
           <div className="lg:col-span-7 flex justify-center lg:justify-end">
             <Image
               src="/socials.png"
-              alt="Nexora platform preview"
+              alt="Pulsara platform preview"
               width={600}
               height={420}
               className="w-full max-w-lg h-auto object-contain"
@@ -207,7 +221,7 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {features.map((feature, idx) => (
               <div
                 key={idx}
@@ -225,10 +239,10 @@ export default function Home() {
           </div>
         </section>
 
-        {/* HOW NEXORA WORKS */}
+        {/* HOW PULSARA WORKS */}
         <section className="py-16 text-center">
           <h2 className="text-3xl font-bold tracking-tight text-[#0F172A]">
-            How Nexora Works
+            How Pulsara Works
           </h2>
 
           {/* Tab Switcher */}
@@ -256,8 +270,8 @@ export default function Home() {
           </div>
 
           {/* Steps */}
-          <div className="mt-16 grid grid-cols-1 gap-8 md:grid-cols-3 relative">
-            {steps.map((step, idx) => (
+          <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-3 relative">
+            {activeSteps.map((step, idx) => (
               <div
                 key={idx}
                 className="flex flex-col items-center max-w-sm mx-auto text-center space-y-4"
@@ -277,7 +291,9 @@ export default function Home() {
         </section>
 
       </div>
-      <Footer />
+      <div className="relative z-10">
+        <Footer />
+      </div>
     </main>
   );
 }
