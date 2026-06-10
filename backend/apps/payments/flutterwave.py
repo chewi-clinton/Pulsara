@@ -14,7 +14,7 @@ def create_payment(tx_ref: str, amount: str, redirect_url: str, customer_email: 
         "redirect_url": redirect_url,
         "customer": {"email": customer_email},
         "customizations": {
-            "title": "Nexora",
+            "title": "Pulsara",
             "logo": f"{settings.FRONTEND_URL}/logo.png",
         },
     }

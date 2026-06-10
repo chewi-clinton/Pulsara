@@ -34,6 +34,7 @@ class SMMOrderStatusSerializer(serializers.ModelSerializer):
 
 class OTPOrderCreateSerializer(serializers.Serializer):
     service_id = serializers.IntegerField()
+    platform = serializers.CharField(required=False, allow_blank=True)
     payment_method = serializers.ChoiceField(choices=["cryptomus", "flutterwave"])
     customer_email = serializers.EmailField(required=False, allow_blank=True)
 
@@ -54,6 +55,7 @@ class OTPOrderStatusSerializer(serializers.ModelSerializer):
             "otp_code",
             "expires_at",
             "seconds_remaining",
+            "payment_method",
         )
 
     def get_order_id(self, obj):
@@ -63,6 +65,5 @@ class OTPOrderStatusSerializer(serializers.ModelSerializer):
         if not obj.expires_at:
             return None
         from django.utils import timezone
-
         remaining = (obj.expires_at - timezone.now()).total_seconds()
         return max(int(remaining), 0)
