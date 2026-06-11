@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { Suspense, useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { CheckCircle2, ExternalLink, Loader2, XCircle } from "lucide-react";
 import Link from "next/link";
@@ -34,7 +34,7 @@ async function fetchStatus(orderId) {
   }
 }
 
-export default function PaymentPage() {
+function PaymentPageInner() {
   const router = useRouter();
   const params = useSearchParams();
 
@@ -195,5 +195,13 @@ export default function PaymentPage() {
         </p>
       </div>
     </div>
+  );
+}
+
+export default function PaymentPage() {
+  return (
+    <Suspense fallback={<div className="flex min-h-screen items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-[#4F46E5]" /></div>}>
+      <PaymentPageInner />
+    </Suspense>
   );
 }
