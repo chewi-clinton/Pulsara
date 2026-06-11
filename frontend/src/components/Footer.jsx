@@ -1,5 +1,85 @@
 "use client";
+
 import React from "react";
+
 export default function Footer() {
-  return <footer>footer</footer>;
+  const currentYear = new Date().getFullYear();
+
+  const footerSections = [
+    {
+      title: "Platform",
+      links: [
+        { label: "Services", href: "/smm" },
+        { label: "OTP Numbers", href: "/otp" },
+        { label: "Pricing", href: "/#pricing" },
+      ],
+    },
+    {
+      title: "Company",
+      links: [
+        { label: "About Us", href: "/about" },
+        { label: "Contact", href: "/contact" },
+      ],
+    },
+    {
+      title: "Resources",
+      links: [
+        { label: "FAQ", href: "/faq" },
+        { label: "Support Center", href: "/contact" },
+      ],
+    },
+    {
+      title: "Legal",
+      links: [
+        { label: "Privacy Policy", href: "/privacy" },
+        { label: "Terms of Service", href: "/terms" },
+        { label: "Cookie Policy", href: "/privacy#cookies" },
+      ],
+    },
+  ];
+
+  return (
+    <footer className="w-full bg-[#FFFFFF] border-t border-slate-100 py-16">
+      <div className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-12">
+        <div className="grid grid-cols-2 gap-8 md:grid-cols-5 lg:gap-12">
+
+          {/* Brand Column */}
+          <div className="col-span-2 flex flex-col justify-between md:col-span-1">
+            <div className="space-y-4">
+              {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+              <a href="/" className="text-xl font-bold tracking-tight text-[#0F172A]">
+                Pulsara
+              </a>
+              <p className="text-xs leading-relaxed text-slate-500 max-w-[200px]">
+                © {currentYear} Pulsara Digital. All rights reserved.
+              </p>
+            </div>
+          </div>
+
+          {/* Dynamic Link Columns */}
+          {footerSections.map((section) => (
+            <div key={section.title} className="flex flex-col space-y-4">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-[#0F172A]">
+                {section.title}
+              </h4>
+              <ul className="space-y-3">
+                {section.links.map((link) => (
+                  <li key={link.label}>
+                    {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+                    <a
+                      href={link.href}
+                      className="text-xs text-slate-600 transition-colors hover:text-[#4F46E5]"
+                    >
+                      {link.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+
+        </div>
+      </div>
+    </footer>
+  );
 }
