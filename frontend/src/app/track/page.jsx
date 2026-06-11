@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Truck, ArrowRight, Hash } from "lucide-react";
 import Footer from "../../components/Footer";
-import Navbar from "../../components/Navbar";
+import Navbar from "../../components/NavbarDynamic";
 
 export default function TrackOrder() {
   const router = useRouter();

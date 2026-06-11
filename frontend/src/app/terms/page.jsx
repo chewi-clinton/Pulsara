@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import Navbar from "../../components/Navbar";
+import Navbar from "../../components/NavbarDynamic";
 import Footer from "../../components/Footer";
 
 const sections = [

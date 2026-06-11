@@ -1,9 +1,8 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
-import Link from "next/link";
 import Footer from "../../components/Footer";
-import Navbar from "../../components/Navbar";
+import Navbar from "../../components/NavbarDynamic";
 import {
   Search,
   ChevronDown,
@@ -325,10 +324,11 @@ export default function FAQ() {
                 </p>
               </div>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-2.5">
-                <Link href="/contact" className="w-full sm:w-auto inline-flex items-center justify-center space-x-1.5 rounded-xl bg-[#4F46E5] px-5 py-2.5 text-xs font-bold text-white shadow-sm hover:bg-[#4338CA] transition-colors">
+                {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+                <a href="/contact" className="w-full sm:w-auto inline-flex items-center justify-center space-x-1.5 rounded-xl bg-[#4F46E5] px-5 py-2.5 text-xs font-bold text-white shadow-sm hover:bg-[#4338CA] transition-colors">
                   <MessageSquare className="h-3.5 w-3.5" />
                   <span>Contact Support</span>
-                </Link>
+                </a>
               </div>
             </div>
 

@@ -1,32 +1,32 @@
 "use client";
 
 import React from "react";
-import Navbar from "../../components/Navbar";
+import Navbar from "../../components/NavbarDynamic";
 import Footer from "../../components/Footer";
 import { Zap, ShieldCheck, BarChart3 } from "lucide-react";
 
-const values = [
-  {
-    icon: <Zap className="h-5 w-5 text-[#4F46E5]" />,
-    title: "Instant Delivery",
-    description:
-      "From social media growth to virtual numbers, every service is processed automatically the moment payment is confirmed — no waiting, no manual handling.",
-  },
-  {
-    icon: <ShieldCheck className="h-5 w-5 text-[#4F46E5]" />,
-    title: "Privacy First",
-    description:
-      "We never ask for your social media passwords or personal information. OTP numbers are provisioned anonymously from real carrier lines worldwide.",
-  },
-  {
-    icon: <BarChart3 className="h-5 w-5 text-[#4F46E5]" />,
-    title: "Transparent Pricing",
-    description:
-      "No hidden fees, no subscriptions. Every service is priced clearly upfront in your preferred currency. What you see is exactly what you pay.",
-  },
-];
-
 export default function AboutPage() {
+  const values = [
+    {
+      Icon: Zap,
+      title: "Instant Delivery",
+      description:
+        "From social media growth to virtual numbers, every service is processed automatically the moment payment is confirmed — no waiting, no manual handling.",
+    },
+    {
+      Icon: ShieldCheck,
+      title: "Privacy First",
+      description:
+        "We never ask for your social media passwords or personal information. OTP numbers are provisioned anonymously from real carrier lines worldwide.",
+    },
+    {
+      Icon: BarChart3,
+      title: "Transparent Pricing",
+      description:
+        "No hidden fees, no subscriptions. Every service is priced clearly upfront in your preferred currency. What you see is exactly what you pay.",
+    },
+  ];
+
   return (
     <div className="min-h-screen bg-[#F8FAFC] font-sans antialiased text-slate-900">
       <Navbar activePage="" />
@@ -65,7 +65,7 @@ export default function AboutPage() {
               className="rounded-2xl border border-slate-100 bg-white p-6 shadow-sm space-y-4"
             >
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#F0F2FE]">
-                {v.icon}
+                <v.Icon className="h-5 w-5 text-[#4F46E5]" />
               </div>
               <h3 className="text-sm font-extrabold text-[#0F172A]">{v.title}</h3>
               <p className="text-xs text-slate-500 leading-relaxed">{v.description}</p>
