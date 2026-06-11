@@ -4,13 +4,13 @@ import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import Footer from "../components/Footer";
+import Navbar from "../components/Navbar";
 import {
   Zap,
   ShieldCheck,
   BarChart3,
   ShoppingCart,
   Globe2,
-  Globe,
 } from "lucide-react";
 
 export default function Home() {
@@ -92,24 +92,7 @@ export default function Home() {
   return (
     <main className="relative min-h-screen overflow-hidden bg-[#FFFFFF] font-sans text-slate-900">
 
-      {/* NAVBAR */}
-      <header className="sticky top-0 z-50 border-b border-slate-100 bg-white/80 backdrop-blur-md px-6 lg:px-16 py-4 flex items-center justify-between">
-        <span className="text-lg font-black tracking-tight text-[#4F46E5]">Pulsara</span>
-        <nav className="flex items-center space-x-8 text-xs font-bold text-slate-500 tracking-wide">
-          <Link href="/" className="text-[#4F46E5] underline decoration-2 underline-offset-4">Home</Link>
-          <Link href="/smm" className="hover:text-slate-900 transition-colors">SMM Services</Link>
-          <Link href="/otp" className="hover:text-slate-900 transition-colors">OTP Numbers</Link>
-          <Link href="/track" className="hover:text-slate-900 transition-colors">Track Order</Link>
-          <Link href="/faq" className="hover:text-slate-900 transition-colors">FAQ</Link>
-        </nav>
-        <div className="flex items-center space-x-4">
-          <Link href="/admin/login" className="text-xs font-bold text-slate-600 hover:text-slate-900 transition-colors">Login</Link>
-          <Link href="/smm" className="rounded-xl bg-[#4F46E5] px-4 py-2 text-xs font-bold text-white shadow-sm hover:bg-[#4338CA] transition-colors">
-            Get Started
-          </Link>
-          <Globe className="h-4 w-4 text-slate-400" />
-        </div>
-      </header>
+      <Navbar activePage="home" />
 
       {/* Background SVG Dot Matrix Grid */}
       <div className="absolute inset-0 z-0 opacity-[0.4] pointer-events-none">
@@ -180,7 +163,7 @@ export default function Home() {
           </div>
 
           {/* Right Column — Hero Image */}
-          <div className="lg:col-span-7 flex justify-center lg:justify-end">
+          <div className="hidden lg:flex lg:col-span-7 justify-center lg:justify-end">
             <Image
               src="/socials.png"
               alt="Pulsara platform preview"

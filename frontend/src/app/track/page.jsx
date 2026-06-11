@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Truck, ArrowRight, Hash } from "lucide-react";
 import Footer from "../../components/Footer";
+import Navbar from "../../components/Navbar";
 
 export default function TrackOrder() {
   const router = useRouter();
@@ -19,6 +20,7 @@ export default function TrackOrder() {
 
   return (
     <div className="flex flex-col min-h-screen w-full bg-[#F8FAFC] font-sans antialiased text-slate-900">
+      <Navbar activePage="track" />
       <div className="flex flex-1 items-center justify-center px-4 py-16">
       <div className="w-full max-w-3xl text-center space-y-8">
 

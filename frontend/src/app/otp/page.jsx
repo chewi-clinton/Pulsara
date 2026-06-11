@@ -3,9 +3,9 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Footer from "../../components/Footer";
-import { formatFcfa } from "../../lib/currency";
+import Navbar from "../../components/Navbar";
+import { useCurrency } from "../../lib/currency";
 import {
-  Globe,
   Search,
   Radio,
   AlertTriangle,
@@ -56,6 +56,7 @@ export default function OTPPage() {
   const [loading, setLoading] = useState(true);
   const [activeApp, setActiveApp] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
+  const { format } = useCurrency();
 
   useEffect(() => {
     api.services.otp()
@@ -90,24 +91,7 @@ export default function OTPPage() {
   return (
     <div className="min-h-screen bg-[#F8FAFC] font-sans antialiased text-slate-900">
 
-      {/* NAVBAR */}
-      <header className="sticky top-0 z-50 border-b border-slate-100 bg-white/80 backdrop-blur-md px-6 lg:px-16 py-4 flex items-center justify-between">
-        <Link href="/" className="text-lg font-black tracking-tight text-[#4F46E5]">Pulsara</Link>
-        <nav className="hidden md:flex items-center space-x-8 text-xs font-bold text-slate-500 tracking-wide">
-          <Link href="/" className="hover:text-slate-900 transition-colors">Home</Link>
-          <Link href="/smm" className="hover:text-slate-900 transition-colors">SMM Services</Link>
-          <Link href="/otp" className="text-[#4F46E5] underline decoration-2 underline-offset-4">OTP Numbers</Link>
-          <Link href="/track" className="hover:text-slate-900 transition-colors">Track Order</Link>
-          <Link href="/faq" className="hover:text-slate-900 transition-colors">FAQ</Link>
-        </nav>
-        <div className="flex items-center space-x-4">
-          <Link href="/admin/login" className="text-xs font-bold text-slate-600 hover:text-slate-900 transition-colors">Login</Link>
-          <Link href="/register" className="rounded-xl bg-[#4F46E5] px-4 py-2 text-xs font-bold text-white shadow-sm hover:bg-[#4338CA] transition-colors">
-            Sign Up
-          </Link>
-          <Globe className="h-4 w-4 text-slate-400" />
-        </div>
-      </header>
+      <Navbar activePage="otp" />
 
       {/* HERO */}
       <section className="bg-white border-b border-slate-100 px-6 py-14 text-center space-y-5">
@@ -197,7 +181,7 @@ export default function OTPPage() {
                   <div className="flex items-center justify-between border-t border-slate-50 pt-3">
                     <div>
                       <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wide">From</p>
-                      <p className="text-lg font-extrabold text-[#4F46E5] font-mono">{formatFcfa(g.min_price)}</p>
+                      <p className="text-lg font-extrabold text-[#4F46E5] font-mono">{format(g.min_price)}</p>
                     </div>
                     <div className="flex items-center space-x-1 text-[10px] font-semibold text-slate-400">
                       <ShieldCheck className="h-3.5 w-3.5 text-[#10B981]" />

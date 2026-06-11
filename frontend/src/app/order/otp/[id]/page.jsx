@@ -14,11 +14,12 @@ import {
   Loader2,
 } from "lucide-react";
 import { api } from "../../../../lib/api";
-import { formatFcfa } from "../../../../lib/currency";
+import { useCurrency } from "../../../../lib/currency";
 
 export default function OTPOrderPage() {
   const params = useParams();
   const orderId = Array.isArray(params.id) ? params.id[0] : params.id ?? "";
+  const { format } = useCurrency();
 
   const [order, setOrder] = useState(null);
   const [error, setError] = useState("");
@@ -115,7 +116,7 @@ export default function OTPOrderPage() {
             {[
               { label: "Country", value: order.country },
               { label: "App", value: order.platform.charAt(0).toUpperCase() + order.platform.slice(1) },
-              { label: "Amount Paid", value: formatFcfa(order.sell_price || "0") },
+              { label: "Amount Paid", value: format(order.sell_price || "0") },
             ].map((item) => (
               <div key={item.label} className="space-y-0.5">
                 <p className="text-[10px] font-bold uppercase tracking-wide text-slate-400">{item.label}</p>

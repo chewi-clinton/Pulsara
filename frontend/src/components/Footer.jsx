@@ -10,33 +10,31 @@ export default function Footer() {
     {
       title: "Platform",
       links: [
-        { label: "Services", href: "#services" },
-        { label: "OTP Numbers", href: "#otp" },
-        { label: "Pricing", href: "#pricing" },
+        { label: "Services", href: "/smm" },
+        { label: "OTP Numbers", href: "/otp" },
+        { label: "Pricing", href: "/#pricing" },
       ],
     },
     {
       title: "Company",
       links: [
-        { label: "About Us", href: "#about" },
-        { label: "Careers", href: "#careers" },
-        { label: "Contact", href: "#contact" },
+        { label: "About Us", href: "/about" },
+        { label: "Contact", href: "/contact" },
       ],
     },
     {
       title: "Resources",
       links: [
-        { label: "FAQ", href: "#faq" },
-        { label: "Support Center", href: "#support" },
-        { label: "API Docs", href: "#docs" },
+        { label: "FAQ", href: "/faq" },
+        { label: "Support Center", href: "/contact" },
       ],
     },
     {
       title: "Legal",
       links: [
-        { label: "Privacy Policy", href: "#privacy" },
-        { label: "Terms of Service", href: "#terms" },
-        { label: "Cookie Policy", href: "#cookies" },
+        { label: "Privacy Policy", href: "/privacy" },
+        { label: "Terms of Service", href: "/terms" },
+        { label: "Cookie Policy", href: "/privacy#cookies" },
       ],
     },
   ];

@@ -3,17 +3,16 @@
 import React, { useState, useMemo } from "react";
 import Link from "next/link";
 import Footer from "../../components/Footer";
+import Navbar from "../../components/Navbar";
 import {
   Search,
   ChevronDown,
   ChevronUp,
   MessageSquare,
-  FileText,
   Truck,
   Smartphone,
   CreditCard,
   ShieldCheck,
-  Globe
 } from "lucide-react";
 
 export default function FAQ() {
@@ -38,6 +37,16 @@ export default function FAQ() {
           id: "ord-2",
           question: "Can I cancel or modify my order after placement?",
           answer: "Because our automation layer hooks directly into upstream providers immediately upon payment success, orders that have entered processing status cannot be changed or recalled."
+        },
+        {
+          id: "ord-3",
+          question: "Will my social media account get banned?",
+          answer: "No. All SMM services use organic-looking delivery patterns that comply with platform guidelines. We never use bots that violate terms of service, and no account credentials are ever required."
+        },
+        {
+          id: "ord-4",
+          question: "What happens if my order is only partially delivered?",
+          answer: "In the rare case of a partial delivery, you will receive the portion that was successfully fulfilled. For issues with delivery, contact our support team and we will investigate with the provider."
         }
       ]
     },
@@ -65,6 +74,16 @@ export default function FAQ() {
               <p className="pt-1">If you don&apos;t receive a code within 5 minutes, we recommend cancelling the current number and requesting a new one.</p>
             </div>
           )
+        },
+        {
+          id: "otp-3",
+          question: "Can I reuse the same number?",
+          answer: "No. Each virtual number is single-use and returned to the carrier pool after the session ends. This ensures maximum anonymity and prevents blocking."
+        },
+        {
+          id: "otp-4",
+          question: "Which countries are supported?",
+          answer: "We currently support 30+ countries including the US, UK, Russia, India, Nigeria, Cameroon, France, Germany, Brazil, and more. The full list is visible on the OTP Numbers page."
         }
       ]
     },
@@ -77,6 +96,21 @@ export default function FAQ() {
           id: "pay-1",
           question: "What payment methods do you accept?",
           answer: "We support decentralized transactions via CryptoMus (Bitcoin, Tether, Ethereum, Litecoin) as well as card and mobile money payments (MTN MoMo, Orange Money) via NotchPay."
+        },
+        {
+          id: "pay-2",
+          question: "Are payments secure?",
+          answer: "Yes. Crypto payments are processed via Cryptomus, a regulated crypto payment gateway. Card and mobile money payments go through NotchPay, which is PCI-compliant and licensed in Cameroon."
+        },
+        {
+          id: "pay-3",
+          question: "Do you offer refunds?",
+          answer: "Refunds are not available for completed orders as services are delivered instantly and costs are incurred immediately with providers. If there is a technical failure before delivery, contact support within 24 hours."
+        },
+        {
+          id: "pay-4",
+          question: "Can I pay with MTN MoMo or Orange Money?",
+          answer: "Yes. Our NotchPay integration supports MTN Mobile Money and Orange Money for customers in Cameroon and supported West African markets."
         }
       ]
     },
@@ -89,6 +123,16 @@ export default function FAQ() {
           id: "sec-1",
           question: "How are my platform API access tokens secured?",
           answer: "All generated enterprise connection strings are hashed client-side before transmission and locked behind multi-tenant isolated relational layers using 256-bit SSL encryption standards."
+        },
+        {
+          id: "sec-2",
+          question: "Do I need an account to place an order?",
+          answer: "No. Guest checkout is available for all services. An account is only needed if you want to track your order history or access the admin dashboard."
+        },
+        {
+          id: "sec-3",
+          question: "How do I reset my password?",
+          answer: "Use the 'Forgot Password' link on the login page. A reset link will be sent to your registered email address."
         }
       ]
     }
@@ -121,30 +165,7 @@ export default function FAQ() {
   return (
     <div className="min-h-screen bg-[#F8FAFC] font-sans antialiased text-slate-900">
 
-      {/* NAVBAR */}
-      <header className="sticky top-0 z-50 border-b border-slate-100 bg-white/80 backdrop-blur-md px-6 lg:px-16 py-4 flex items-center justify-between">
-        <div className="flex items-center space-x-2">
-          <span className="text-lg font-black tracking-tight text-[#4F46E5]">Pulsara</span>
-        </div>
-        <nav className="flex items-center space-x-8 text-xs font-bold text-slate-500 tracking-wide">
-          <Link href="/" className="hover:text-slate-900 transition-colors">Home</Link>
-          <Link href="/smm" className="hover:text-slate-900 transition-colors">SMM Services</Link>
-          <Link href="/otp" className="hover:text-slate-900 transition-colors">OTP Numbers</Link>
-          <Link href="/track" className="hover:text-slate-900 transition-colors">Track Order</Link>
-          <Link href="/faq" className="text-[#4F46E5] underline decoration-2 underline-offset-4">FAQ</Link>
-        </nav>
-        <div className="flex items-center space-x-4">
-          <Link href="/admin/login" className="text-xs font-bold text-slate-600 hover:text-slate-900 transition-colors">
-            Login
-          </Link>
-          <Link href="/register" className="rounded-xl bg-[#4F46E5] px-4 py-2 text-xs font-bold text-white shadow-sm hover:bg-[#4338CA] transition-colors">
-            Sign Up
-          </Link>
-          <button type="button" className="text-slate-400 hover:text-slate-600">
-            <Globe className="h-4 w-4" />
-          </button>
-        </div>
-      </header>
+      <Navbar activePage="faq" />
 
       {/* HERO SEARCH */}
       <section className="bg-white border-b border-slate-100 px-6 py-16 text-center space-y-6">
@@ -304,14 +325,10 @@ export default function FAQ() {
                 </p>
               </div>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-2.5">
-                <button type="button" className="w-full sm:w-auto inline-flex items-center justify-center space-x-1.5 rounded-xl bg-[#4F46E5] px-5 py-2.5 text-xs font-bold text-white shadow-sm hover:bg-[#4338CA] transition-colors">
+                <Link href="/contact" className="w-full sm:w-auto inline-flex items-center justify-center space-x-1.5 rounded-xl bg-[#4F46E5] px-5 py-2.5 text-xs font-bold text-white shadow-sm hover:bg-[#4338CA] transition-colors">
                   <MessageSquare className="h-3.5 w-3.5" />
                   <span>Contact Support</span>
-                </button>
-                <button type="button" className="w-full sm:w-auto inline-flex items-center justify-center space-x-1.5 rounded-xl border border-slate-200 bg-white px-5 py-2.5 text-xs font-bold text-slate-700 hover:bg-slate-50 transition-colors">
-                  <FileText className="h-3.5 w-3.5 text-slate-400" />
-                  <span>Read API Docs</span>
-                </button>
+                </Link>
               </div>
             </div>
 

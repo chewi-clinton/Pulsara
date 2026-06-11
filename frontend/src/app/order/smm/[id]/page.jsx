@@ -12,7 +12,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { api } from "../../../../lib/api";
-import { formatFcfa } from "../../../../lib/currency";
+import { useCurrency } from "../../../../lib/currency";
 
 const STATUS_STEPS = {
   pending_payment: 0,
@@ -47,6 +47,7 @@ const STATUS_BADGE = {
 export default function SMMOrderStatus() {
   const params = useParams();
   const orderId = Array.isArray(params.id) ? params.id[0] : params.id ?? "";
+  const { format } = useCurrency();
 
   const [order, setOrder] = useState(null);
   const [error, setError] = useState("");
@@ -130,7 +131,7 @@ export default function SMMOrderStatus() {
             {[
               { label: "Service", value: order.service_name },
               { label: "Quantity", value: Number(order.quantity).toLocaleString() },
-              { label: "Amount Paid", value: formatFcfa(order.sell_price) },
+              { label: "Amount Paid", value: format(order.sell_price) },
               { label: "Placed On", value: new Date(order.created_at).toLocaleDateString() },
             ].map((item) => (
               <div key={item.label} className="space-y-0.5">
