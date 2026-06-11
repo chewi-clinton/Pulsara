@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Footer from "../../components/Footer";
+import { formatFcfa } from "../../lib/currency";
 import {
   Globe,
   Search,
@@ -181,7 +182,7 @@ export default function SMMPage() {
                   <div className="grid grid-cols-3 gap-2 text-center">
                     <div className="rounded-xl bg-slate-50 px-2 py-2 space-y-0.5">
                       <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wide">Per 1K</p>
-                      <p className="text-sm font-extrabold text-[#4F46E5] font-mono">${pricePerK.toFixed(2)}</p>
+                      <p className="text-sm font-extrabold text-[#4F46E5] font-mono">{formatFcfa(pricePerK)} / 1K</p>
                     </div>
                     <div className="rounded-xl bg-slate-50 px-2 py-2 space-y-0.5">
                       <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wide">Min</p>

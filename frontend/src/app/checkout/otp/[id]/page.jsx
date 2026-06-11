@@ -16,6 +16,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { api } from "../../../../lib/api";
+import { formatFcfa } from "../../../../lib/currency";
 
 const FLAGS = {
   US: "🇺🇸", GB: "🇬🇧", IN: "🇮🇳", RU: "🇷🇺", BR: "🇧🇷",
@@ -223,7 +224,7 @@ export default function OTPCheckout() {
                 <button type="submit" disabled={submitting}
                   className="flex w-full items-center justify-center space-x-2 rounded-xl bg-[#4F46E5] py-3.5 text-sm font-bold text-white shadow-md hover:bg-[#4338CA] transition-all active:scale-[0.99] disabled:opacity-60">
                   {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Zap className="h-4 w-4 fill-white" />}
-                  <span>{submitting ? "Processing…" : `Get Number · $${selectedService ? parseFloat(selectedService.sell_price).toFixed(2) : "—"}`}</span>
+                  <span>{submitting ? "Processing…" : `Get Number · ${selectedService ? formatFcfa(selectedService.sell_price) : "—"}`}</span>
                 </button>
               </div>
             </form>
@@ -252,13 +253,13 @@ export default function OTPCheckout() {
               <div className="border-t border-slate-100 pt-4 flex justify-between items-center">
                 <span className="text-sm font-bold text-slate-600">Total</span>
                 <span className="text-2xl font-extrabold text-[#4F46E5] font-mono">
-                  ${selectedService ? parseFloat(selectedService.sell_price).toFixed(2) : "—"}
+                  {selectedService ? formatFcfa(selectedService.sell_price) : "—"}
                 </span>
               </div>
               <button type="submit" form="otp-checkout" disabled={submitting}
                 className="hidden lg:flex w-full items-center justify-center space-x-2 rounded-xl bg-[#4F46E5] py-3.5 text-sm font-bold text-white shadow-md hover:bg-[#4338CA] transition-all active:scale-[0.99] disabled:opacity-60">
                 {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Zap className="h-4 w-4 fill-white" />}
-                <span>{submitting ? "Processing…" : `Get Number · $${selectedService ? parseFloat(selectedService.sell_price).toFixed(2) : "—"}`}</span>
+                <span>{submitting ? "Processing…" : `Get Number · ${selectedService ? formatFcfa(selectedService.sell_price) : "—"}`}</span>
               </button>
             </div>
             <div className="flex items-center justify-center space-x-2 text-[11px] font-semibold text-slate-400">

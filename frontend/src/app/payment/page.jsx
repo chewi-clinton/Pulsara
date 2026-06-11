@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { CheckCircle2, ExternalLink, Loader2, XCircle } from "lucide-react";
 import Link from "next/link";
 import { api } from "../../lib/api";
+import { formatFcfa } from "../../lib/currency";
 
 const TERMINAL = ["paid", "processing", "failed"];
 
@@ -150,7 +151,7 @@ function PaymentPageInner() {
         {/* Amount */}
         <div className="rounded-2xl border border-slate-100 bg-white p-6 shadow-sm text-center space-y-1">
           <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Amount Due</p>
-          <p className="text-4xl font-extrabold text-[#0F172A] font-mono">${amount}</p>
+          <p className="text-4xl font-extrabold text-[#0F172A] font-mono">{formatFcfa(amount)}</p>
           <p className="text-[10px] font-semibold text-slate-400">Order: {orderId}</p>
         </div>
 

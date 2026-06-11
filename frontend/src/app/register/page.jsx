@@ -38,8 +38,11 @@ export default function Register() {
     setLoading(true);
     try {
       await api.auth.register(fullName, email, password);
-      setSuccess("Account created! Redirecting to sign in…");
-      setTimeout(() => router.push("/admin/login"), 1500);
+      const { access, refresh } = await api.auth.login(email, password);
+      localStorage.setItem("access_token", access);
+      localStorage.setItem("refresh_token", refresh);
+      setSuccess("Account created! Redirecting…");
+      setTimeout(() => router.push("/admin/dashboard"), 1000);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Registration failed.");
     } finally {

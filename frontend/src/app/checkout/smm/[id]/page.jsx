@@ -16,6 +16,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { api } from "../../../../lib/api";
+import { formatFcfa, toFcfa } from "../../../../lib/currency";
 
 const paymentMethods = [
   { id: "cryptomus", label: "Crypto", sub: "BTC, ETH, USDT, LTC", icon: Bitcoin },
@@ -123,7 +124,7 @@ export default function SMMCheckout() {
                 </p>
                 <p className="text-sm font-extrabold text-[#0F172A] mt-0.5">{service.name}</p>
               </div>
-              <p className="text-sm font-extrabold text-[#4F46E5] shrink-0">${pricePerK.toFixed(2)} / 1K</p>
+              <p className="text-sm font-extrabold text-[#4F46E5] shrink-0">{formatFcfa(pricePerK)} / 1K</p>
             </div>
 
             <form id="smm-checkout" onSubmit={handleSubmit} className="space-y-6">
@@ -222,7 +223,7 @@ export default function SMMCheckout() {
                 <button type="submit" disabled={submitting}
                   className="flex w-full items-center justify-center space-x-2 rounded-xl bg-[#4F46E5] py-3.5 text-sm font-bold text-white shadow-md hover:bg-[#4338CA] transition-all active:scale-[0.99] disabled:opacity-60">
                   {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Zap className="h-4 w-4 fill-white" />}
-                  <span>{submitting ? "Processing…" : `Place Order · $${total}`}</span>
+                  <span>{submitting ? "Processing…" : `Place Order · ${formatFcfa(total)}`}</span>
                 </button>
               </div>
             </form>
@@ -243,17 +244,17 @@ export default function SMMCheckout() {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-slate-400">Rate</span>
-                  <span className="text-slate-700">${pricePerK.toFixed(2)} / 1K</span>
+                  <span className="text-slate-700">{formatFcfa(pricePerK)} / 1K</span>
                 </div>
               </div>
               <div className="border-t border-slate-100 pt-4 flex justify-between items-center">
                 <span className="text-sm font-bold text-slate-600">Total</span>
-                <span className="text-2xl font-extrabold text-[#4F46E5] font-mono">${total}</span>
+                <span className="text-2xl font-extrabold text-[#4F46E5] font-mono">{formatFcfa(total)}</span>
               </div>
               <button type="submit" form="smm-checkout" disabled={submitting}
                 className="hidden lg:flex w-full items-center justify-center space-x-2 rounded-xl bg-[#4F46E5] py-3.5 text-sm font-bold text-white shadow-md hover:bg-[#4338CA] transition-all active:scale-[0.99] disabled:opacity-60">
                 {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Zap className="h-4 w-4 fill-white" />}
-                <span>{submitting ? "Processing…" : `Place Order · $${total}`}</span>
+                <span>{submitting ? "Processing…" : `Place Order · ${formatFcfa(total)}`}</span>
               </button>
             </div>
             <div className="flex items-center justify-center space-x-2 text-[11px] font-semibold text-slate-400">

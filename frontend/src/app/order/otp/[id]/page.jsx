@@ -14,6 +14,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { api } from "../../../../lib/api";
+import { formatFcfa } from "../../../../lib/currency";
 
 export default function OTPOrderPage() {
   const params = useParams();
@@ -114,7 +115,7 @@ export default function OTPOrderPage() {
             {[
               { label: "Country", value: order.country },
               { label: "App", value: order.platform.charAt(0).toUpperCase() + order.platform.slice(1) },
-              { label: "Amount Paid", value: `$${parseFloat(order.sell_price || "0").toFixed(2)}` },
+              { label: "Amount Paid", value: formatFcfa(order.sell_price || "0") },
             ].map((item) => (
               <div key={item.label} className="space-y-0.5">
                 <p className="text-[10px] font-bold uppercase tracking-wide text-slate-400">{item.label}</p>

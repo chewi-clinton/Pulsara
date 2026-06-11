@@ -12,6 +12,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { api } from "../../../../lib/api";
+import { formatFcfa } from "../../../../lib/currency";
 
 const STATUS_STEPS = {
   pending_payment: 0,
@@ -129,7 +130,7 @@ export default function SMMOrderStatus() {
             {[
               { label: "Service", value: order.service_name },
               { label: "Quantity", value: Number(order.quantity).toLocaleString() },
-              { label: "Amount Paid", value: `$${parseFloat(order.sell_price).toFixed(2)}` },
+              { label: "Amount Paid", value: formatFcfa(order.sell_price) },
               { label: "Placed On", value: new Date(order.created_at).toLocaleDateString() },
             ].map((item) => (
               <div key={item.label} className="space-y-0.5">

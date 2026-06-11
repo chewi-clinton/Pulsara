@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Footer from "../../components/Footer";
+import { formatFcfa } from "../../lib/currency";
 import {
   Globe,
   Search,
@@ -196,7 +197,7 @@ export default function OTPPage() {
                   <div className="flex items-center justify-between border-t border-slate-50 pt-3">
                     <div>
                       <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wide">From</p>
-                      <p className="text-lg font-extrabold text-[#4F46E5] font-mono">${g.min_price.toFixed(2)}</p>
+                      <p className="text-lg font-extrabold text-[#4F46E5] font-mono">{formatFcfa(g.min_price)}</p>
                     </div>
                     <div className="flex items-center space-x-1 text-[10px] font-semibold text-slate-400">
                       <ShieldCheck className="h-3.5 w-3.5 text-[#10B981]" />
