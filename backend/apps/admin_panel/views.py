@@ -300,8 +300,47 @@ class AdminSMMServiceSyncView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        # Placeholder: trigger Celery sync task when implemented
-        return Response({"detail": "SMM service sync started."})
+        from apps.providers import smmfollowers
+        from apps.services.models import SMMService
+        from apps.services.tasks import _guess_platform, _guess_category
+        from datetime import datetime, timezone as dt_timezone
+
+        try:
+            services = smmfollowers.get_services()
+        except Exception as exc:
+            return Response({"detail": f"Provider error: {exc}"}, status=status.HTTP_502_BAD_GATEWAY)
+
+        now = datetime.now(tz=dt_timezone.utc)
+        existing_ids = set(SMMService.objects.values_list("provider_service_id", flat=True))
+        fetched_ids = set()
+
+        for svc in services:
+            pid = str(svc.get("service") or svc.get("id", ""))
+            if not pid:
+                continue
+            fetched_ids.add(pid)
+            cost = float(svc.get("rate", 0))
+            SMMService.objects.update_or_create(
+                provider_service_id=pid,
+                defaults={
+                    "name": svc.get("name", ""),
+                    "platform": _guess_platform(svc.get("name", "")),
+                    "category": _guess_category(svc.get("name", "")),
+                    "cost_per_1000": cost,
+                    "sell_per_1000": round(cost * 1.40, 4),
+                    "min_quantity": int(svc.get("min", 10)),
+                    "max_quantity": int(svc.get("max", 100000)),
+                    "is_active": True,
+                    "synced_at": now,
+                },
+            )
+
+        gone = existing_ids - fetched_ids
+        if gone:
+            SMMService.objects.filter(provider_service_id__in=gone).update(is_active=False)
+
+        return Response({"detail": f"Synced {len(fetched_ids)} services, deactivated {len(gone)}."})
+
 
 
 class AdminOTPServiceListView(APIView):
@@ -366,8 +405,84 @@ class AdminOTPServiceSyncView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        # Placeholder: trigger Celery sync task when implemented
-        return Response({"detail": "OTP service sync started."})
+        import requests as req
+        from apps.services.models import OTPService
+        from datetime import datetime, timezone as dt_timezone
+        from django.conf import settings as django_settings
+
+        PLATFORMS = ["whatsapp", "telegram", "google", "facebook", "instagram", "tinder", "twitter", "discord"]
+        MARKUP = 1.40
+
+        try:
+            resp = req.get(
+                "https://5sim.net/v1/guest/prices",
+                headers={"Authorization": f"Bearer {django_settings.FIVESIM_API_KEY}"},
+                timeout=30,
+            )
+            resp.raise_for_status()
+            price_data = resp.json()
+        except Exception as exc:
+            return Response({"detail": f"Provider error: {exc}"}, status=status.HTTP_502_BAD_GATEWAY)
+
+        now = datetime.now(tz=dt_timezone.utc)
+        created = 0
+
+        COUNTRY_NAMES = {
+            "russia": "Russia", "usa": "United States", "ukraine": "Ukraine",
+            "indonesia": "Indonesia", "india": "India", "brazil": "Brazil",
+            "philippines": "Philippines", "vietnam": "Vietnam", "china": "China",
+            "cambodia": "Cambodia", "myanmar": "Myanmar", "nigeria": "Nigeria",
+            "kenya": "Kenya", "ghana": "Ghana", "england": "United Kingdom",
+            "france": "France", "germany": "Germany", "canada": "Canada",
+            "australia": "Australia", "mexico": "Mexico", "pakistan": "Pakistan",
+            "bangladesh": "Bangladesh", "thailand": "Thailand", "malaysia": "Malaysia",
+            "egypt": "Egypt", "ethiopia": "Ethiopia", "tanzania": "Tanzania",
+            "southafrica": "South Africa", "cameroon": "Cameroon", "senegal": "Senegal",
+            "cotedivoire": "Côte d'Ivoire", "morocco": "Morocco",
+        }
+        COUNTRY_CODES = {
+            "russia": "RU", "usa": "US", "ukraine": "UA", "indonesia": "ID",
+            "india": "IN", "brazil": "BR", "philippines": "PH", "vietnam": "VN",
+            "china": "CN", "nigeria": "NG", "kenya": "KE", "ghana": "GH",
+            "england": "GB", "france": "FR", "germany": "DE", "canada": "CA",
+            "australia": "AU", "mexico": "MX", "pakistan": "PK", "bangladesh": "BD",
+            "thailand": "TH", "malaysia": "MY", "egypt": "EG", "cameroon": "CM",
+            "senegal": "SN", "morocco": "MA", "southafrica": "ZA", "cambodia": "KH",
+            "myanmar": "MM", "cotedivoire": "CI", "ethiopia": "ET", "tanzania": "TZ",
+        }
+
+        for country, platforms in price_data.items():
+            if country not in COUNTRY_CODES:
+                continue
+            for platform, operators in platforms.items():
+                if platform not in PLATFORMS:
+                    continue
+                if not operators:
+                    continue
+                costs = [op.get("cost", 0) for op in operators.values() if isinstance(op, dict) and op.get("count", 0) > 0]
+                if not costs:
+                    continue
+                cost = min(costs)
+                if cost <= 0:
+                    continue
+                sell = round(cost * MARKUP, 4)
+                OTPService.objects.update_or_create(
+                    provider="5sim",
+                    platform=platform,
+                    country_code=COUNTRY_CODES[country],
+                    defaults={
+                        "country_name": COUNTRY_NAMES.get(country, country.title()),
+                        "provider_service_id": f"5sim_{country}_{platform}",
+                        "cost_price": cost,
+                        "sell_price": sell,
+                        "is_active": True,
+                        "synced_at": now,
+                    },
+                )
+                created += 1
+
+        return Response({"detail": f"Synced {created} OTP services."})
+
 
 
 class AdminAnalyticsView(APIView):
