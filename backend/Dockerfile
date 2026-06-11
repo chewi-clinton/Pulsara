@@ -20,11 +20,11 @@ RUN SECRET_KEY=build-only python manage.py collectstatic --noinput
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
-EXPOSE 8000
+EXPOSE 8150
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["gunicorn", "config.wsgi:application", \
-     "--bind", "0.0.0.0:8000", \
+     "--bind", "0.0.0.0:8150", \
      "--workers", "4", \
      "--timeout", "120", \
      "--access-logfile", "-", \
