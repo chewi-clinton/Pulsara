@@ -15,6 +15,7 @@ STATUS_CHOICES = [
     ("paid", "Paid"),
     ("failed", "Failed"),
     ("expired", "Expired"),
+    ("refunded", "Refunded"),
 ]
 
 

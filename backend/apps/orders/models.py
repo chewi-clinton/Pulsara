@@ -23,6 +23,7 @@ OTP_STATUS_CHOICES = [
     ("waiting_sms", "Waiting for SMS"),
     ("received", "Received"),
     ("expired", "Expired"),
+    ("failed", "Failed"),
     ("cancelled", "Cancelled"),
     ("refunded", "Refunded"),
 ]
